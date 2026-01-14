@@ -48,6 +48,8 @@ export async function generateMetadata(): Promise<Metadata> {
     getThemeSettings(),
   ]);
 
+
+
   if (!clientData) {
     throw new Error('Failed to load client data for metadata');
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { supabase } from '@/lib/supabase';
-import Testimonials from './Testimonials';
+import { getVariantComponent } from '@/lib/variants';
 
 interface ReviewItem {
   author: string;
@@ -121,6 +121,9 @@ async function getTestimonialsSection(): Promise<ReviewsContent | null> {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default async function TestimonialsWrapper({ locationId }: { locationId?: string | null }) {
+  // Dynamically load Testimonials component from active variant
+  const Testimonials = await getVariantComponent('Testimonials');
+  
   const reviewsContent = await getTestimonialsSection();
   
   if (!reviewsContent) {

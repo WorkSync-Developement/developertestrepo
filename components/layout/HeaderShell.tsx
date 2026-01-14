@@ -1,4 +1,4 @@
-import HeaderBar from 'components/layout/HeaderBar';
+import { getVariantComponent } from '@/lib/variants';
 import { getClientData } from '@/lib/client';
 import { getFeatures, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
@@ -8,6 +8,9 @@ interface HeaderShellProps {
 }
 
 export default async function HeaderShell({ locationPrefix }: HeaderShellProps) {
+	// Dynamically load the Header component based on active variant
+	const Header = await getVariantComponent('Header');
+	
 	// Extract slug from locationPrefix (e.g., "/locations/houston" -> "houston")
 	const slug = locationPrefix?.startsWith('/locations/') 
 		? locationPrefix.replace('/locations/', '') 
@@ -25,13 +28,13 @@ export default async function HeaderShell({ locationPrefix }: HeaderShellProps) 
 	// Get website name from client_website or clients table
 	const websiteName = clientData?.agency_name;
 
-	// Merge isMultiLoc into features so HeaderBar gets the correct multi-location state
+	// Merge isMultiLoc into features so Header gets the correct multi-location state
 	const mergedFeatures = features 
 		? { ...features, multi_location: isMultiLoc }
 		: { multi_location: isMultiLoc };
 
 	return (
-		<HeaderBar
+		<Header
 			websiteName={websiteName}
 			phone={clientData?.phone}
 			locationPrefix={locationPrefix}

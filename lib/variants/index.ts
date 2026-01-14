@@ -17,7 +17,7 @@ import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
 
 // Valid variant names - must match database constraint
-export type VariantName = 'coastal' | 'modern' | 'minimal' | 'bold' | 'classic';
+export type VariantName = 'coastal' | 'modern' | 'minimal';
 
 // Component names that have variant implementations
 export type VariantComponentName = 
@@ -33,7 +33,7 @@ export type VariantComponentName =
   | 'PolicyPageTemplate';
 
 // Default variant (current template style)
-export const DEFAULT_VARIANT: VariantName = 'coastal';
+export const DEFAULT_VARIANT: VariantName = 'modern';
 
 /**
  * Get the current client's template variant from database
@@ -130,10 +130,6 @@ async function importVariantModule(
       return import(`@/components/variants/modern/${path}`);
     case 'minimal':
       return import(`@/components/variants/minimal/${path}`);
-    case 'bold':
-      return import(`@/components/variants/bold/${path}`);
-    case 'classic':
-      return import(`@/components/variants/classic/${path}`);
     default:
       throw new Error(`Unknown variant: ${variant}`);
   }
