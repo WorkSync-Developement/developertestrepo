@@ -17,7 +17,7 @@ import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
 
 // Valid variant names - must match database constraint
-export type VariantName = 'coastal' | 'modern' | 'minimal' | 'bold' | 'classic';
+export type VariantName = 'coastal' | 'modern' | 'minimal' | 'bold' | 'classic' | 'professional';
 
 // Component names that have variant implementations
 export type VariantComponentName = 
@@ -33,7 +33,7 @@ export type VariantComponentName =
   | 'PolicyPageTemplate';
 
 // Default variant (current template style)
-export const DEFAULT_VARIANT: VariantName = 'coastal';
+export const DEFAULT_VARIANT: VariantName = 'professional';
 
 /**
  * Get the current client's template variant from database
@@ -67,7 +67,7 @@ export const getTemplateVariant = cache(async (): Promise<VariantName> => {
 
 /**
  * Dynamically import a variant component
- * Falls back to 'coastal' (default) if the variant doesn't have the component
+ * Falls back to 'professional' (default) if the variant doesn't have the component
  */
 export async function getVariantComponent<T = React.ComponentType<any>>(
   componentName: VariantComponentName
@@ -124,16 +124,18 @@ async function importVariantModule(
   // Dynamic import based on variant and component path
   // Note: These imports must be statically analyzable for Next.js bundling
   switch (variant) {
-    case 'coastal':
-      return import(`@/components/variants/coastal/${path}`);
-    case 'modern':
-      return import(`@/components/variants/modern/${path}`);
-    case 'minimal':
-      return import(`@/components/variants/minimal/${path}`);
-    case 'bold':
-      return import(`@/components/variants/bold/${path}`);
-    case 'classic':
-      return import(`@/components/variants/classic/${path}`);
+    // case 'coastal':
+    //   return import(`@/components/variants/coastal/${path}`);
+    // case 'modern':
+    //   return import(`@/components/variants/modern/${path}`);
+    // case 'minimal':
+    //   return import(`@/components/variants/minimal/${path}`);
+    // case 'bold':
+    //   return import(`@/components/variants/bold/${path}`);
+    // case 'classic':
+    //   return import(`@/components/variants/classic/${path}`);
+    case 'professional':
+      return import(`@/components/variants/professional/${path}.tsx`);
     default:
       throw new Error(`Unknown variant: ${variant}`);
   }

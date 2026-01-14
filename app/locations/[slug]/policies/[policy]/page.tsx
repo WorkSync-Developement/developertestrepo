@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import PolicyPageTemplate from '@/components/policies/PolicyPageTemplate';
+import PolicyPageTemplate from '@/components/variants/professional/policies/PolicyPageTemplate';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getSchemaDefaults, buildPageUrl } from '@/lib/structured-data';
@@ -14,29 +14,43 @@ interface PageProps {
 }
 
 /**
- * Get a single policy by slug for a specific location (no category filter)
+ * Get a single policy by slug for a specific location (prioritizing location-specific override)
  */
 async function getPolicyBySlugForLocation(policySlug: string, locationId: string) {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
   if (!clientId) return null;
 
-  const { data, error } = await supabase
+  // 1. Try to find a location-specific policy override
+  const { data: locationPolicy, error: locationError } = await supabase
     .from('client_policy_pages')
     .select('*')
     .eq('client_id', clientId)
     .eq('slug', policySlug)
     .eq('location_id', locationId)
     .eq('published', true)
-    .single();
+    .maybeSingle();
 
-  if (error) {
-    if (error.code !== 'PGRST116') {
-      console.error('Error fetching policy by slug:', error);
-    }
-    return null;
+  if (locationPolicy) return locationPolicy;
+
+  if (locationError && locationError.code !== 'PGRST116') {
+      console.error('Error fetching location policy by slug:', locationError);
   }
 
-  return data;
+  // 2. Fallback to global policy
+  const { data: globalPolicy, error: globalError } = await supabase
+    .from('client_policy_pages')
+    .select('*')
+    .eq('client_id', clientId)
+    .eq('slug', policySlug)
+    .is('location_id', null)
+    .eq('published', true)
+    .maybeSingle();
+
+  if (globalError && globalError.code !== 'PGRST116') {
+    console.error('Error fetching global policy by slug:', globalError);
+  }
+
+  return globalPolicy;
 }
 
 export async function generateStaticParams() {
@@ -45,17 +59,35 @@ export async function generateStaticParams() {
 
   const websites = await getAllWebsites();
   const params: { slug: string; policy: string }[] = [];
+  
+  // Fetch global policies once
+  const globalPolicies = await getAllPolicies(null);
 
   for (const website of websites) {
     const locationId = website.id;
     if (!locationId) continue;
+    
+    // Track added policies to avoid duplicates
+    const addedPolicySlugs = new Set<string>();
 
-    const policies = await getAllPolicies(locationId);
-    for (const policy of policies) {
+    // Add location specific policies
+    const locationPolicies = await getAllPolicies(locationId);
+    for (const policy of locationPolicies) {
       params.push({
         slug: website.location_slug,
         policy: policy.slug,
       });
+      addedPolicySlugs.add(policy.slug);
+    }
+
+    // Add global policies (if not overridden/already added)
+    for (const policy of globalPolicies) {
+        if (!addedPolicySlugs.has(policy.slug)) {
+            params.push({
+                slug: website.location_slug,
+                policy: policy.slug,
+            });
+        }
     }
   }
 
@@ -260,9 +292,39 @@ export default async function LocationPolicyPage({ params }: PageProps) {
 
   // Add basePath for URL construction
   const relatedPolicies = validatedRelatedPolicies.map((p: any) => ({
-    ...p,
-    basePath: `/locations/${slug}/policies`,
+    policy_name: p.title,
+    policy_slug: p.slug,
+    content_summary: p.content_summary
   }));
+
+  // Process content_sections to extract features and build HTML body
+  let contentBody = '';
+  let features: string[] = [];
+
+  if (policy.content_sections && Array.isArray(policy.content_sections)) {
+    policy.content_sections.forEach((section: any) => {
+      if (section.type === 'heading') {
+        const Tag = section.tag || 'h2';
+        // Add styling classes to headings
+        const classes = Tag === 'h2' 
+          ? 'text-2xl font-bold mb-4 mt-8 first:mt-0 text-[var(--color-primary,#004080)]' 
+          : 'text-xl font-bold mb-3 mt-6 text-[var(--color-primary,#004080)]';
+        contentBody += `<${Tag} class="${classes}">${section.content}</${Tag}>`;
+      } else if (section.type === 'text') {
+        // Wrap text paragraphs
+        contentBody += `<div class="mb-6 leading-relaxed opacity-90">${section.content}</div>`;
+      } else if (section.type === 'features' && section.items) {
+        // Extract features to pass separately
+        features = [...features, ...section.items];
+      }
+    });
+  }
+
+  // Fallback contact info
+  const contactInfo = {
+    phone_number: websiteData.client_locations?.phone || clientData?.phone_number || '',
+    email: websiteData.client_locations?.email || clientData?.email || '',
+  };
 
   return (
     <>
@@ -275,19 +337,20 @@ export default async function LocationPolicyPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <PolicyPageTemplate
-        heroSection={{
-          heading: policy.hero_section?.heading || policy.title || '',
-          subheading: policy.hero_section?.subheading || '',
+        policy={{
+          policy_name: policy.hero_section?.heading || policy.title || '',
+          policy_slug: policySlug,
+          content_summary: policy.hero_section?.subheading || policy.content_summary,
+          content_body: contentBody,
+          features: features,
+          faq: policy.faqs || [],
+          cta_text: policy.cta_text || 'Get a Quote',
+          cta_url: '/contact',
         }}
         relatedPolicies={relatedPolicies}
-        relatedTerms={policy.related_terms || []}
-        canonicalUrl={`/locations/${slug}/policies/${policySlug}`}
-        contentSections={policy.content_sections}
-        faqs={policy.faqs || []}
-        youtubeUrl={policy.youtube_url}
-      >
-        {null}
-      </PolicyPageTemplate>
+        contactInfo={contactInfo}
+        locationSlug={slug}
+      />
     </>
   );
 }
