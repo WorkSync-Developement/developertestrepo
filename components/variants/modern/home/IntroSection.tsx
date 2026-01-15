@@ -159,28 +159,28 @@ export default async function IntroSection(): Promise<React.ReactElement | null>
            <div className="relative order-1 md:order-1">
            <div className="relative aspect-square max-w-md mx-auto md:mx-0">
              {/* Background circle */}
-             <div className="absolute inset-0 bg-[#5b7c9a] opacity-[0.7] rounded-full shadow-2xl" />
+             <div className="absolute inset-0 bg-modern-primary-70 rounded-full shadow-2xl" />
              
              {/* Main card */}
-             <div className="absolute inset-8 bg-white backdrop-blur-sm rounded-3xl shadow-lg border border-gray-200 flex flex-col items-center justify-center p-8 text-center">
-               <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-lg" style={{ background: 'linear-gradient(to bottom right, #5b7c99, #5b7c99)' }}>
-                 <Heart className="w-10 h-10 text-white" />
+             <div className="absolute inset-8 bg-theme-bg backdrop-blur-sm rounded-3xl shadow-lg border border-secondary/20 flex flex-col items-center justify-center p-8 text-center">
+               <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-lg bg-primary">
+                 <Heart className="w-10 h-10 text-primary-foreground" />
                </div>
                <h3 className="text-2xl font-bold text-theme-text mb-2">Family Values</h3>
                <p className="text-theme-body text-sm">Protecting what matters since day one</p>
              </div>
 
              {/* Floating badges */}
-             <div className="absolute -top-4 right-8 bg-white backdrop-blur-sm px-4 py-2 rounded-full shadow-md border border-gray-200">
+             <div className="absolute -top-4 right-8 bg-theme-bg backdrop-blur-sm px-4 py-2 rounded-full shadow-md border border-secondary/20">
                <div className="flex items-center gap-2">
-                 <Users className="w-4 h-4" style={{ color: '#5b7c99' }} />
+                 <Users className="w-4 h-4 text-primary" />
                  <span className="text-sm font-semibold text-theme-text">Local Team</span>
                </div>
              </div>
 
-             <div className="absolute -bottom-4 left-8 bg-white backdrop-blur-sm px-4 py-2 rounded-full shadow-md border border-gray-200" style={{ animationDelay: '-2s' }}>
+             <div className="absolute -bottom-4 left-8 bg-theme-bg backdrop-blur-sm px-4 py-2 rounded-full shadow-md border border-secondary/20" style={{ animationDelay: '-2s' }}>
                <div className="flex items-center gap-2">
-                 <MapPin className="w-4 h-4" style={{ color: '#5b7c99' }} />
+                 <MapPin className="w-4 h-4 text-primary" />
                  <span className="text-sm font-semibold text-theme-text">Georgia Based</span>
                </div>
              </div>
@@ -192,17 +192,17 @@ export default async function IntroSection(): Promise<React.ReactElement | null>
           <div className="space-y-8 order-2 md:order-2">
             {introContent?.tagline?.content && (
               <div className="inline-block">
-                <BadgeSmall className="text-sm text-white" style={{ backgroundColor: '#5b7c9a' }}>{introContent.tagline.content}</BadgeSmall>
+                <BadgeSmall className="text-sm text-secondary-foreground bg-secondary">{introContent.tagline.content}</BadgeSmall>
               </div>
             )}
             
             {introContent?.title?.content && (
               <div className="space-y-4">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight text-black">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight text-theme-text">
                   {introContent.title.content}
                 </h2>
                 {/* Decorative line */}
-                <div className="w-24 h-1 rounded-full" style={{ background: 'linear-gradient(to right, #5b7c99, rgba(91, 124, 153, 0.3))' }}></div>
+                <div className="w-24 h-1 rounded-full bg-gradient-modern-primary-horizontal"></div>
               </div>
             )}
 
@@ -210,7 +210,7 @@ export default async function IntroSection(): Promise<React.ReactElement | null>
               {paragraphs.map((paragraph, index) => (
                 <div key={index} className="relative pl-6">
                   {/* Decorative bullet */}
-                  <div className="absolute left-0 top-3 w-2 h-2 rounded-full" style={{ backgroundColor: '#5b7c99' }}></div>
+                  <div className="absolute left-0 top-3 w-2 h-2 rounded-full bg-primary"></div>
                   <p className="text-theme-body text-base md:text-lg leading-relaxed">
                     {paragraph?.content || ''}
                   </p>
@@ -220,9 +220,9 @@ export default async function IntroSection(): Promise<React.ReactElement | null>
 
             {/* Call to Action Card */}
             <div className="pt-6">
-              <div className="inline-flex items-center gap-4 px-6 py-4 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-                <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-md" style={{ background: 'linear-gradient(135deg, #5b7c99, #5b7c99)' }}>
-                  <Heart className="w-7 h-7 text-white" />
+              <div className="inline-flex items-center gap-4 px-6 py-4 bg-theme-bg rounded-xl shadow-lg border border-secondary/20 hover:shadow-xl transition-shadow duration-300">
+                <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-primary">
+                  <Heart className="w-7 h-7 text-primary-foreground" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-theme-text">Trusted by Families</p>

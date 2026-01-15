@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, MapPin, Mail } from 'lucide-react';
+import { Phone, MapPin, Mail, Facebook, Instagram, Linkedin, Youtube, ArrowUp } from 'lucide-react';
 import { formatPhoneNumber } from '@/lib/utils';
 import SocialLinksModal from '@/components/layout/SocialLinksModal';
 import type { SocialLinksModalData } from '@/lib/types/social-links';
@@ -75,15 +75,23 @@ export default function Footer({
     { label: 'Contact', href: `${basePath}/contact` },
   ];
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer
-      className="relative bg-theme-bg-alt"
+      className="relative overflow-hidden"
       style={{
-        backgroundColor: 'var(--footer-bg, var(--color-background-alt))',
-        color: 'var(--footer-text-secondary, var(--color-text-body))',
+        backgroundColor: '#09314a',
+        color: '#ffffff',
       }}
     >
-      <div className="container mx-auto px-4 py-16">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, #5b7c99, transparent)' }}></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+      
+      <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
           <div className="lg:col-span-1">
@@ -93,30 +101,27 @@ export default function Footer({
                 alt={`${agencyName || 'Company'} logo`}
                 width={140}
                 height={50}
-                className="h-12 w-auto mb-4 object-contain"
+                className="h-12 w-auto mb-6 object-contain filter brightness-0 invert"
               />
             )}
             {agencyName && (
-              <h3
-                className="text-xl font-heading font-bold mb-3"
-                style={{ color: 'var(--footer-text, var(--color-text-primary))' }}
-              >
+              <h3 className="text-2xl font-heading font-bold mb-4 text-white">
                 {agencyName}
               </h3>
             )}
             {tagline && (
-              <p className="text-sm mb-4 opacity-80">{tagline}</p>
+              <p className="text-sm mb-6 text-white/80 leading-relaxed">{tagline}</p>
             )}
             {badges && badges.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {badges.map((badge, idx) => (
                   <span
                     key={idx}
-                    className="inline-block px-3 py-1 text-xs rounded-full border"
+                    className="inline-block px-4 py-2 text-xs rounded-full font-medium"
                     style={{
-                      borderColor: 'var(--footer-badge-bg, var(--color-secondary))',
-                      backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 15%, transparent)',
-                      color: 'var(--footer-text, var(--color-text-primary))',
+                      backgroundColor: 'rgba(91, 124, 153, 0.2)',
+                      color: '#ffffff',
+                      border: '1px solid rgba(91, 124, 153, 0.3)',
                     }}
                   >
                     {badge.name}
@@ -128,10 +133,7 @@ export default function Footer({
 
           {/* Quick Links */}
           <div>
-            <h4
-              className="font-heading font-semibold text-lg mb-4"
-              style={{ color: 'var(--footer-text, var(--color-text-primary))' }}
-            >
+            <h4 className="font-heading font-semibold text-lg mb-6 text-white">
               Quick Links
             </h4>
             <ul className="space-y-3">
@@ -139,10 +141,10 @@ export default function Footer({
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-colors hover:opacity-70 inline-block"
-                    style={{ color: 'var(--footer-text-secondary, var(--color-text-body))' }}
+                    className="text-sm text-white/80 hover:text-white transition-colors inline-flex items-center gap-2 group"
                   >
-                    {link.label}
+                    <span>{link.label}</span>
+                    <ArrowUp size={14} className="rotate-45 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform opacity-0 group-hover:opacity-100" />
                   </Link>
                 </li>
               ))}
@@ -150,10 +152,10 @@ export default function Footer({
                 <li>
                   <button
                     onClick={() => setIsSocialLinksModalOpen(true)}
-                    className="text-sm transition-colors hover:opacity-70 text-left"
-                    style={{ color: 'var(--footer-text-secondary, var(--color-text-body))' }}
+                    className="text-sm text-white/80 hover:text-white transition-colors text-left inline-flex items-center gap-2 group"
                   >
-                    Social Links
+                    <span>Social Links</span>
+                    <ArrowUp size={14} className="rotate-45 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform opacity-0 group-hover:opacity-100" />
                   </button>
                 </li>
               )}
@@ -162,17 +164,16 @@ export default function Footer({
 
           {/* Contact Info */}
           <div>
-            <h4
-              className="font-heading font-semibold text-lg mb-4"
-              style={{ color: 'var(--footer-text, var(--color-text-primary))' }}
-            >
+            <h4 className="font-heading font-semibold text-lg mb-6 text-white">
               Contact
             </h4>
-            <div className="space-y-3 text-sm">
+            <div className="space-y-4 text-sm">
               {address && (
-                <div className="flex items-start gap-2">
-                  <MapPin size={16} className="mt-0.5 flex-shrink-0 opacity-70" />
-                  <div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}>
+                    <MapPin size={16} className="text-white" />
+                  </div>
+                  <div className="text-white/80">
                     <p>{address}</p>
                     {(city || state || postalCode) && (
                       <p>
@@ -186,9 +187,11 @@ export default function Footer({
               {phoneHref && (
                 <a
                   href={phoneHref}
-                  className="flex items-center gap-2 transition-colors hover:opacity-70"
+                  className="flex items-center gap-3 transition-colors hover:text-white text-white/80 group"
                 >
-                  <Phone size={16} className="opacity-70" />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}>
+                    <Phone size={16} className="text-white" />
+                  </div>
                   <span>{formattedPhone}</span>
                 </a>
               )}
@@ -198,21 +201,18 @@ export default function Footer({
           {/* Locations (if multi-location) */}
           {isMultiLocation && allLocations.length > 0 && (
             <div>
-              <h4
-                className="font-heading font-semibold text-lg mb-4"
-                style={{ color: 'var(--footer-text, var(--color-text-primary))' }}
-              >
+              <h4 className="font-heading font-semibold text-lg mb-6 text-white">
                 Locations
               </h4>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-3 text-sm">
                 {allLocations.slice(0, 4).map((location) => (
                   <li key={location.id}>
                     <Link
                       href={`/locations/${location.location_slug}`}
-                      className="transition-colors hover:opacity-70 inline-block"
-                      style={{ color: 'var(--footer-text-secondary, var(--color-text-body))' }}
+                      className="text-white/80 hover:text-white transition-colors inline-flex items-center gap-2 group"
                     >
-                      {location.location_name || `${location.city}, ${location.state}`}
+                      <MapPin size={14} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+                      <span>{location.location_name || `${location.city}, ${location.state}`}</span>
                     </Link>
                   </li>
                 ))}
@@ -222,59 +222,74 @@ export default function Footer({
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t" style={{ borderColor: 'var(--divider-color, var(--color-secondary))' }}>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-            <p className="opacity-70">
+        <div className="pt-8 border-t border-white/10">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-white/70 text-sm">
               © {currentYear} {agencyName || 'Company'}. All rights reserved.
             </p>
-            {socialLinks && (
-              <div className="flex items-center gap-4">
-                {socialLinks.facebook && (
-                  <a
-                    href={socialLinks.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="opacity-70 hover:opacity-100 transition-opacity"
-                    aria-label="Facebook"
-                  >
-                    <span className="text-sm">Facebook</span>
-                  </a>
-                )}
-                {socialLinks.instagram && (
-                  <a
-                    href={socialLinks.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="opacity-70 hover:opacity-100 transition-opacity"
-                    aria-label="Instagram"
-                  >
-                    <span className="text-sm">Instagram</span>
-                  </a>
-                )}
-                {socialLinks.linkedin && (
-                  <a
-                    href={socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="opacity-70 hover:opacity-100 transition-opacity"
-                    aria-label="LinkedIn"
-                  >
-                    <span className="text-sm">LinkedIn</span>
-                  </a>
-                )}
-                {socialLinks.youtube && (
-                  <a
-                    href={socialLinks.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="opacity-70 hover:opacity-100 transition-opacity"
-                    aria-label="YouTube"
-                  >
-                    <span className="text-sm">YouTube</span>
-                  </a>
-                )}
-              </div>
-            )}
+            <div className="flex items-center gap-6">
+              {socialLinks && (
+                <div className="flex items-center gap-4">
+                  {socialLinks.facebook && (
+                    <a
+                      href={socialLinks.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      aria-label="Facebook"
+                    >
+                      <Facebook size={18} className="text-white" />
+                    </a>
+                  )}
+                  {socialLinks.instagram && (
+                    <a
+                      href={socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      aria-label="Instagram"
+                    >
+                      <Instagram size={18} className="text-white" />
+                    </a>
+                  )}
+                  {socialLinks.linkedin && (
+                    <a
+                      href={socialLinks.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin size={18} className="text-white" />
+                    </a>
+                  )}
+                  {socialLinks.youtube && (
+                    <a
+                      href={socialLinks.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      aria-label="YouTube"
+                    >
+                      <Youtube size={18} className="text-white" />
+                    </a>
+                  )}
+                </div>
+              )}
+              {/* Back to Top Button */}
+              <button
+                onClick={scrollToTop}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: 'rgba(91, 124, 153, 0.3)' }}
+                aria-label="Back to top"
+              >
+                <ArrowUp size={18} className="text-white" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -283,7 +298,8 @@ export default function Footer({
         <SocialLinksModal
           isOpen={isSocialLinksModalOpen}
           onClose={() => setIsSocialLinksModalOpen(false)}
-          data={socialLinksModalData}
+          socialLinksData={socialLinksModalData}
+          isMultiLocation={isMultiLocation}
         />
       )}
     </footer>

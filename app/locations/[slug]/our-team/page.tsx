@@ -1,8 +1,11 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTemplateVariant } from '@/lib/variants';
 import TeamPageTemplate from 'components/our-team/TeamPageTemplate';
 import TeamMembers from 'components/our-team/TeamMembers';
+import ModernTeamPageTemplate from '@/components/variants/modern/our-team/TeamPageTemplate';
+import ModernTeamMembers from '@/components/variants/modern/our-team/TeamMembers';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getPageMetadata } from '@/lib/page-metadata';
@@ -85,14 +88,23 @@ export default async function LocationTeamPage({ params }: PageProps) {
   const locationId = websiteData.client_locations?.location_id || await getLocationIdBySlug(slug);
   const pageMetadata = await getPageMetadata('our-team', locationId);
   const locationName = websiteData.client_locations?.location_name || '';
+  const variant = await getTemplateVariant();
+
+  const heroSection = {
+    heading: pageMetadata.hero_heading || "Meet Our Team",
+    subheading: pageMetadata.hero_subheading || `Dedicated insurance professionals serving ${locationName} and the surrounding area.`,
+  };
+
+  if (variant === 'modern') {
+    return (
+      <ModernTeamPageTemplate heroSection={heroSection}>
+        <ModernTeamMembers locationId={locationId} basePath={`/locations/${slug}/our-team`} />
+      </ModernTeamPageTemplate>
+    );
+  }
 
   return (
-    <TeamPageTemplate
-      heroSection={{
-        heading: pageMetadata.hero_heading || "Meet Our Team",
-        subheading: pageMetadata.hero_subheading || `Dedicated insurance professionals serving ${locationName} and the surrounding area.`,
-      }}
-    >
+    <TeamPageTemplate heroSection={heroSection}>
       <TeamMembers locationId={locationId} basePath={`/locations/${slug}/our-team`} />
     </TeamPageTemplate>
   );

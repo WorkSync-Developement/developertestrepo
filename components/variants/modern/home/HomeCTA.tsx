@@ -1,8 +1,27 @@
 import React from 'react';
 import Link from 'next/link';
+import { Phone, Mail, MapPin, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getClientData } from '@/lib/client';
 import { isMultiLocation } from '@/lib/website';
+
+// Local Badge component for modern variant
+interface BadgeProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+function Badge({ children, className = '', style }: BadgeProps) {
+  return (
+    <div
+      className={`inline-block rounded-full px-4 py-1 text-sm font-medium ${className}`}
+      style={style}
+    >
+      {children}
+    </div>
+  );
+}
 
 interface CTAContent {
   subtitle?: { content: string };
@@ -58,18 +77,7 @@ async function getLocations(): Promise<Location[]> {
   return data || [];
 }
 
-const GRADIENT_MAP: Record<string, string> = {
-  'to-r': 'to right',
-  'to-l': 'to left',
-  'to-t': 'to top',
-  'to-b': 'to bottom',
-  'to-br': 'to bottom right',
-  'to-bl': 'to bottom left',
-  'to-tr': 'to top right',
-  'to-tl': 'to top left',
-};
-
-export default async function HomeCTA(): Promise<JSX.Element | null> {
+export default async function HomeCTA(): Promise<React.ReactElement | null> {
   const [ctaContent, clientData, multiLocation, locations] = await Promise.all([
     getCTASection(),
     getClientData(),
@@ -81,96 +89,128 @@ export default async function HomeCTA(): Promise<JSX.Element | null> {
   const description = ctaContent?.description?.content || 'Contact us today to learn how we can help protect what matters most.';
   const city = clientData?.city;
   const state = clientData?.state;
-  const styles = ctaContent?.styles;
-
-  const gradientDirection = GRADIENT_MAP[styles?.gradient?.direction || 'to-r'] || 'to right';
-  const gradientStart = styles?.gradient?.startColor || 'var(--color-background-alt)';
-  const gradientEnd = styles?.gradient?.endColor || 'var(--color-primary)';
-  
-  const sectionStyle: React.CSSProperties = {
-    background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`,
-  };
-
-  const cardBgColor = styles?.card?.backgroundColor || '#ffffff';
-  const cardBgOpacity = styles?.card?.backgroundOpacity ?? 10;
-  const cardStyle: React.CSSProperties = {
-    backgroundColor: `color-mix(in srgb, ${cardBgColor} ${cardBgOpacity}%, transparent)`,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  };
-
-  const buttonBgColor = styles?.button?.backgroundColor || 'var(--color-accent)';
-  const buttonTextColor = styles?.button?.textColor || 'var(--color-accent-foreground)';
-  const buttonStyle: React.CSSProperties = {
-    backgroundColor: buttonBgColor,
-    color: buttonTextColor,
-  };
-
-  const locationCount = locations.length;
-  const gridCols = locationCount === 1 
-    ? 'grid-cols-1 max-w-md' 
-    : locationCount === 2 
-      ? 'grid-cols-1 md:grid-cols-2 max-w-4xl' 
-      : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl';
 
   return (
-    <section className="py-16 text-primary-foreground relative" style={sectionStyle}>
+    <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-cta">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, #ffffff, transparent)' }}></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, #ffffff, transparent)' }}></div>
+      
       <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 mb-6">
+            <Badge className="text-sm text-white">
+              Get In Touch
+            </Badge>
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white">
             {subtitle}
           </h2>
-          <p className="text-primary-foreground/90 max-w-2xl mx-auto text-lg">
+          <div className="w-32 h-1.5 rounded-full mx-auto mb-6 bg-white/30"></div>
+          <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
             {description}
           </p>
         </div>
         
         {multiLocation && locations.length > 0 ? (
-          <div className={`grid ${gridCols} gap-8 mx-auto`}>
-            {locations.map((location) => (
+          <div className="flex flex-wrap justify-center gap-8">
+            {locations.map((location, index) => (
               <Link
                 key={location.id}
                 href={`/locations/${location.location_slug}/contact`}
-                className="block"
+                className="block group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-sm"
               >
-                <div 
-                  className="rounded-lg p-8 text-center border transition-all shadow-lg transform hover:-translate-y-1 duration-300 h-full"
-                  style={cardStyle}
-                >
-                  <h3 className="text-2xl font-bold mb-3">
-                    {location.location_name}
-                  </h3>
-                  <p className="mb-5 opacity-80">
-                    {location.city}, {location.state}
-                  </p>
-                  <span 
-                    className="inline-flex items-center justify-center font-bold rounded-full py-3 px-6 transition-colors"
-                    style={buttonStyle}
-                  >
-                    Contact Us
-                  </span>
+                <div className="relative bg-white rounded-3xl border-2 border-white/20 p-8 hover:border-white/40 hover:shadow-2xl transition-all duration-300 h-full flex flex-col hover:-translate-y-2 overflow-hidden shadow-lg">
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-0 right-0 w-20 h-20 from-modern-primary-10 bg-gradient-to-br to-transparent rounded-bl-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300 bg-gradient-modern-primary">
+                        <MapPin className="w-8 h-8 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold mb-3 text-center text-black group-hover:text-[#5b7c99] transition-colors">
+                      {location.location_name}
+                    </h3>
+                    <p className="text-center mb-6 text-theme-body font-medium">
+                      {location.city}, {location.state}
+                    </p>
+                    
+                    {/* Contact features */}
+                    <div className="mb-8 space-y-2">
+                      <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
+                        <Phone className="w-4 h-4" style={{ color: '#5b7c99' }} />
+                        <span>Call Today</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
+                        <CheckCircle2 className="w-4 h-4 text-secondary" />
+                        <span>Expert Support</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-auto text-center">
+                      <span
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-primary-foreground shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:gap-3 transform group-hover:scale-105 bg-gradient-modern-primary"
+                      >
+                        Contact Us
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 max-w-md mx-auto">
-            <Link href="/contact" className="block">
-              <div 
-                className="rounded-lg p-8 text-center border transition-all shadow-lg transform hover:-translate-y-1 duration-300"
-                style={cardStyle}
-              >
-                <h3 className="text-2xl font-bold mb-3">
-                  {clientData?.agency_name || 'Our Office'}
-                </h3>
-                <p className="mb-5 opacity-80">
-                  {city && state ? `${city}, ${state}` : 'Get in touch with us'}
-                </p>
-                <span 
-                  className="inline-flex items-center justify-center font-bold rounded-full py-3 px-6 transition-colors"
-                  style={buttonStyle}
-                >
-                  Contact Us
-                </span>
+          <div className="flex justify-center">
+            <Link href="/contact" className="block group w-full max-w-md">
+              <div className="relative bg-white rounded-3xl border-2 border-white/20 p-10 hover:border-white/40 hover:shadow-2xl transition-all duration-300 flex flex-col hover:-translate-y-2 overflow-hidden shadow-lg text-center">
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                {/* Decorative corner accent */}
+                <div className="absolute top-0 right-0 w-24 h-24 from-modern-primary-10 bg-gradient-to-br to-transparent rounded-bl-full"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center mb-6">
+                    <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300 bg-gradient-modern-primary">
+                      <Mail className="w-10 h-10 text-white" />
+                    </div>
+                  </div>
+                  <h3 className="text-3xl font-heading font-bold mb-4 text-black group-hover:text-[#5b7c99] transition-colors">
+                    {clientData?.agency_name || 'Our Office'}
+                  </h3>
+                  <p className="mb-8 text-theme-body font-medium text-lg">
+                    {city && state ? `${city}, ${state}` : 'Get in touch with us'}
+                  </p>
+                  
+                  {/* Contact features */}
+                  <div className="mb-8 space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-theme-body">
+                      <Phone className="w-5 h-5" style={{ color: '#5b7c99' }} />
+                      <span>Call Today</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-theme-body">
+                      <Mail className="w-5 h-5" style={{ color: '#5b7c99' }} />
+                      <span>Email Us</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-theme-body">
+                      <CheckCircle2 className="w-5 h-5 text-secondary" />
+                      <span>Expert Support</span>
+                    </div>
+                  </div>
+                  
+                  <span
+                    className="inline-flex items-center gap-2 px-10 py-4 rounded-full font-semibold text-primary-foreground shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:gap-3 transform group-hover:scale-105 bg-gradient-modern-primary"
+                  >
+                    Contact Us
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
               </div>
             </Link>
           </div>

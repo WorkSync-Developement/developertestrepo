@@ -8,10 +8,15 @@ import { getWebsiteBySlug, getAllWebsites, isMultiLocation } from '@/lib/website
 import { Divider } from '@/components/ui/Divider';
 import { supabase } from '@/lib/supabase';
 import { getSchemaDefaults, buildOpeningHoursSpec, buildPageUrl } from '@/lib/structured-data';
+import { getTemplateVariant } from '@/lib/variants';
 import TestimonialsCarousel from '@/components/location/TestimonialsCarousel';
 import LocationFeaturedPolicies from '@/components/location/LocationFeaturedPolicies';
 import LocationFAQSection from '@/components/location/LocationFAQSection';
 import LocationCareersSection from '@/components/location/LocationCareersSection';
+import ModernTestimonialsCarousel from '@/components/variants/modern/location/TestimonialsCarousel';
+import ModernLocationFeaturedPolicies from '@/components/variants/modern/location/LocationFeaturedPolicies';
+import ModernLocationFAQSection from '@/components/variants/modern/location/LocationFAQSection';
+import ModernLocationCareersSection from '@/components/variants/modern/location/LocationCareersSection';
 
 // Inline interfaces for location page JSONB sections
 interface HeroImageBlock {
@@ -393,12 +398,13 @@ export default async function LocationLandingPage({ params }: PageProps) {
   }
 
   const { slug } = await params;
-  const [website, clientData, heroSettings, introAspectRatio, ctaStyles] = await Promise.all([
+  const [website, clientData, heroSettings, introAspectRatio, ctaStyles, variant] = await Promise.all([
     getWebsiteBySlug(slug),
     getClientData(),
     getHomePageHeroSettings(),
     getIntroAspectRatio(),
     getHomePageCTAStyles(),
+    getTemplateVariant(),
   ]);
 
   if (!website) {
@@ -527,7 +533,7 @@ export default async function LocationLandingPage({ params }: PageProps) {
           </div>
         </div>
         
-        <Divider position="bottom" />
+        {variant !== 'modern' && <Divider position="bottom" />}
       </section>
 
       {/* Intro Section - if content exists */}
@@ -579,130 +585,216 @@ export default async function LocationLandingPage({ params }: PageProps) {
 
       {/* Featured Policies Section */}
       {locationId && (
-        <LocationFeaturedPolicies 
-          locationId={locationId} 
-          locationSlug={slug} 
-        />
+        variant === 'modern' ? (
+          <ModernLocationFeaturedPolicies 
+            locationId={locationId} 
+            locationSlug={slug} 
+          />
+        ) : (
+          <LocationFeaturedPolicies 
+            locationId={locationId} 
+            locationSlug={slug} 
+          />
+        )
       )}
 
       {/* Testimonials Section - carousel format */}
       {testimonials && testimonials.length > 0 && (
-        <TestimonialsCarousel testimonials={testimonials} />
+        variant === 'modern' ? (
+          <ModernTestimonialsCarousel testimonials={testimonials} />
+        ) : (
+          <TestimonialsCarousel testimonials={testimonials} />
+        )
       )}
 
       {/* CTA Section - uses home page CTA styles */}
-      {(() => {
-        // Build dynamic styles from home page CTA settings
-        const gradientDirection = GRADIENT_MAP[ctaStyles?.gradient?.direction || 'to-r'] || 'to right';
-        const gradientStart = ctaStyles?.gradient?.startColor || 'var(--color-background-alt)';
-        const gradientEnd = ctaStyles?.gradient?.endColor || 'var(--color-primary-80)';
-        
-        const sectionStyle: React.CSSProperties = {
-          background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`,
-        };
-
-        // Card styles
-        const cardBgMode = ctaStyles?.card?.backgroundMode || 'transparent';
-        const cardBgColor = ctaStyles?.card?.backgroundColor || '#ffffff';
-        const cardBgOpacity = ctaStyles?.card?.backgroundOpacity ?? 10;
-        const cardBorderColor = ctaStyles?.card?.borderColor || 'rgba(255, 255, 255, 0.2)';
-        
-        const cardStyle: React.CSSProperties = cardBgMode === 'solid' 
-          ? {
-              backgroundColor: cardBgColor,
-              borderColor: cardBorderColor,
-            }
-          : {
-              backgroundColor: `color-mix(in srgb, ${cardBgColor} ${cardBgOpacity}%, transparent)`,
-              borderColor: cardBorderColor,
-            };
-
-        // Typography styles
-        const headingColor = ctaStyles?.typography?.headingColor || 'inherit';
-        const bodyColor = ctaStyles?.typography?.bodyColor || 'inherit';
-
-        // Icon container styles
-        const iconBgColor = ctaStyles?.iconContainer?.backgroundColor || '#ffffff';
-        const iconBgOpacity = ctaStyles?.iconContainer?.backgroundOpacity ?? 15;
-        const iconContainerStyle: React.CSSProperties = {
-          backgroundColor: `color-mix(in srgb, ${iconBgColor} ${iconBgOpacity}%, transparent)`,
-        };
-
-        // Button styles
-        const buttonBgColor = ctaStyles?.button?.backgroundColor || '#ffffff';
-        const buttonTextColor = ctaStyles?.button?.textColor || 'var(--color-primary)';
-        const buttonStyle: React.CSSProperties = {
-          backgroundColor: buttonBgColor,
-          color: buttonTextColor,
-        };
-
-        return (
-          <section className="py-16 px-4 text-primary-foreground relative" style={sectionStyle}>
-            <Divider position="top" />
-            <div className="container mx-auto max-w-6xl text-center relative z-10">
-              <h2 
-                className="text-3xl md:text-4xl font-heading font-bold mb-4"
-                style={{ color: headingColor }}
-              >
+      {variant === 'modern' ? (
+        <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-cta">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10 bg-gradient-modern-radial-white"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-white"></div>
+          
+          <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white">
                 {ctaSection?.heading || `Connect With Your ${locationName} Team`}
               </h2>
-              <p 
-                className="text-primary-foreground/90 max-w-2xl mx-auto text-lg mb-10"
-                style={{ color: bodyColor, opacity: 0.9 }}
-              >
+              <div className="h-1 w-32 rounded mx-auto mb-6 bg-white/30"></div>
+              <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
                 Contact us today to learn how we can help protect what matters most.
               </p>
-              
-              <div className="grid grid-cols-1 max-w-md mx-auto">
-                <Link href={ctaSection?.buttonLink || "/contact"} className="block">
-                  <div 
-                    className="backdrop-blur-sm rounded-lg p-8 text-center border transition-all shadow-lg transform hover:-translate-y-1 duration-300"
-                    style={cardStyle}
-                  >
-                    <div className="rounded-full p-4 inline-flex mb-4" style={iconContainerStyle}>
-                      <img src="/Images/icons/map-pin.svg" alt="Location" width={32} height={32} />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-3" style={{ color: headingColor }}>
-                      {locationName}
-                    </h3>
-                    <p className="mb-5" style={{ color: bodyColor, opacity: 0.8 }}>
-                      {city}, {state}
-                    </p>
-                    <span 
-                      className="inline-flex items-center justify-center font-bold rounded-full py-3 px-6 transition-colors"
-                      style={buttonStyle}
-                    >
+            </div>
+            
+            <div className="flex justify-center">
+              <Link 
+                href={ctaSection?.buttonLink || `/locations/${slug}/contact`}
+                className="block w-full max-w-md transform hover:-translate-y-2 transition-all duration-300"
+              >
+                <div className="bg-white rounded-xl shadow-lg border border-white/20 p-8 hover:shadow-xl transition-all duration-300 flex flex-col h-full relative overflow-hidden">
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-modern-primary-10 to-transparent rounded-bl-full"></div>
+                  
+                  <div className="relative z-10 rounded-full p-4 inline-flex mb-4 mx-auto bg-modern-primary-20">
+                    <img src="/Images/icons/map-pin.svg" alt="Location" width={32} height={32} className="text-primary" />
+                  </div>
+                  
+                  <h3 className="relative z-10 text-2xl font-heading font-bold mb-3 text-center text-theme-text">
+                    {locationName}
+                  </h3>
+                  
+                  <div className="relative z-10 h-1 w-16 rounded mx-auto mb-4 bg-gradient-modern-primary-secondary"></div>
+                  
+                  <p className="relative z-10 mb-6 text-center text-theme-body">
+                    {city}, {state}
+                  </p>
+                  
+                  <div className="relative z-10 text-center mt-auto">
+                    <span className="inline-flex items-center gap-2 font-bold py-3 px-8 rounded-full text-base transition-all bg-gradient-modern-primary text-white hover:opacity-90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                       {ctaSection?.buttonText || "Contact Us"}
                     </span>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
-          </section>
-        );
-      })()}
+          </div>
+        </section>
+      ) : (
+        (() => {
+          // Build dynamic styles from home page CTA settings
+          const gradientDirection = GRADIENT_MAP[ctaStyles?.gradient?.direction || 'to-r'] || 'to right';
+          const gradientStart = ctaStyles?.gradient?.startColor || 'var(--color-background-alt)';
+          const gradientEnd = ctaStyles?.gradient?.endColor || 'var(--color-primary-80)';
+          
+          const sectionStyle: React.CSSProperties = {
+            background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`,
+          };
+
+          // Card styles
+          const cardBgMode = ctaStyles?.card?.backgroundMode || 'transparent';
+          const cardBgColor = ctaStyles?.card?.backgroundColor || '#ffffff';
+          const cardBgOpacity = ctaStyles?.card?.backgroundOpacity ?? 10;
+          const cardBorderColor = ctaStyles?.card?.borderColor || 'rgba(255, 255, 255, 0.2)';
+          
+          const cardStyle: React.CSSProperties = cardBgMode === 'solid' 
+            ? {
+                backgroundColor: cardBgColor,
+                borderColor: cardBorderColor,
+              }
+            : {
+                backgroundColor: `color-mix(in srgb, ${cardBgColor} ${cardBgOpacity}%, transparent)`,
+                borderColor: cardBorderColor,
+              };
+
+          // Typography styles
+          const headingColor = ctaStyles?.typography?.headingColor || 'inherit';
+          const bodyColor = ctaStyles?.typography?.bodyColor || 'inherit';
+
+          // Icon container styles
+          const iconBgColor = ctaStyles?.iconContainer?.backgroundColor || '#ffffff';
+          const iconBgOpacity = ctaStyles?.iconContainer?.backgroundOpacity ?? 15;
+          const iconContainerStyle: React.CSSProperties = {
+            backgroundColor: `color-mix(in srgb, ${iconBgColor} ${iconBgOpacity}%, transparent)`,
+          };
+
+          // Button styles
+          const buttonBgColor = ctaStyles?.button?.backgroundColor || '#ffffff';
+          const buttonTextColor = ctaStyles?.button?.textColor || 'var(--color-primary)';
+          const buttonStyle: React.CSSProperties = {
+            backgroundColor: buttonBgColor,
+            color: buttonTextColor,
+          };
+
+          return (
+            <section className="py-16 px-4 text-primary-foreground relative" style={sectionStyle}>
+              <Divider position="top" />
+              <div className="container mx-auto max-w-6xl text-center relative z-10">
+                <h2 
+                  className="text-3xl md:text-4xl font-heading font-bold mb-4"
+                  style={{ color: headingColor }}
+                >
+                  {ctaSection?.heading || `Connect With Your ${locationName} Team`}
+                </h2>
+                <p 
+                  className="text-primary-foreground/90 max-w-2xl mx-auto text-lg mb-10"
+                  style={{ color: bodyColor, opacity: 0.9 }}
+                >
+                  Contact us today to learn how we can help protect what matters most.
+                </p>
+                
+                <div className="grid grid-cols-1 max-w-md mx-auto">
+                  <Link href={ctaSection?.buttonLink || "/contact"} className="block">
+                    <div 
+                      className="backdrop-blur-sm rounded-lg p-8 text-center border transition-all shadow-lg transform hover:-translate-y-1 duration-300"
+                      style={cardStyle}
+                    >
+                      <div className="rounded-full p-4 inline-flex mb-4" style={iconContainerStyle}>
+                        <img src="/Images/icons/map-pin.svg" alt="Location" width={32} height={32} />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3" style={{ color: headingColor }}>
+                        {locationName}
+                      </h3>
+                      <p className="mb-5" style={{ color: bodyColor, opacity: 0.8 }}>
+                        {city}, {state}
+                      </p>
+                      <span 
+                        className="inline-flex items-center justify-center font-bold rounded-full py-3 px-6 transition-colors"
+                        style={buttonStyle}
+                      >
+                        {ctaSection?.buttonText || "Contact Us"}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </section>
+          );
+        })()
+      )}
 
       {/* FAQ Section */}
-      <LocationFAQSection faqSection={pageData?.faq_section || {
-        tagline: 'Common Questions',
-        subtitle: 'Questions We Often Hear',
-        description: 'Quick answers to help you understand your coverage options.',
-        questions: []
-      }} />
+      {variant === 'modern' ? (
+        <ModernLocationFAQSection faqSection={pageData?.faq_section || {
+          tagline: 'Common Questions',
+          subtitle: 'Questions We Often Hear',
+          description: 'Quick answers to help you understand your coverage options.',
+          questions: []
+        }} />
+      ) : (
+        <LocationFAQSection faqSection={pageData?.faq_section || {
+          tagline: 'Common Questions',
+          subtitle: 'Questions We Often Hear',
+          description: 'Quick answers to help you understand your coverage options.',
+          questions: []
+        }} />
+      )}
 
       {/* Careers Section - controlled by show_careers_page feature flag */}
       {showCareersSection && (
-        <LocationCareersSection 
-          careersSection={pageData?.careers_section || {
-            heading: `Insurance Careers in ${city}`,
-            description: 'Start your career in insurance with us.',
-            button_text: 'Apply Now'
-          }}
-          locationName={locationName}
-          locationSlug={slug}
-          city={city}
-          state={state}
-        />
+        variant === 'modern' ? (
+          <ModernLocationCareersSection 
+            careersSection={pageData?.careers_section || {
+              heading: `Insurance Careers in ${city}`,
+              description: 'Start your career in insurance with us.',
+              button_text: 'Apply Now'
+            }}
+            locationName={locationName}
+            locationSlug={slug}
+            city={city}
+            state={state}
+          />
+        ) : (
+          <LocationCareersSection 
+            careersSection={pageData?.careers_section || {
+              heading: `Insurance Careers in ${city}`,
+              description: 'Start your career in insurance with us.',
+              button_text: 'Apply Now'
+            }}
+            locationName={locationName}
+            locationSlug={slug}
+            city={city}
+            state={state}
+          />
+        )
       )}
 
       {/* Structured Data for SEO */}

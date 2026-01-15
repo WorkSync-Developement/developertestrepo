@@ -1,10 +1,26 @@
 import React from 'react';
 import Link from 'next/link';
+import { Briefcase, ArrowRight, Users, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { Badge } from '@/components/ui/Badge';
 import { isMultiLocation } from '@/lib/website';
-import type { LocationPoliciesSectionSettings } from '@/lib/types/theme';
-import { DEFAULT_THEME } from '@/lib/theme/defaults';
+
+// Local Badge component for modern variant
+interface BadgeProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+function Badge({ children, className = '', style }: BadgeProps) {
+  return (
+    <div
+      className={`inline-block rounded-full px-4 py-1 text-sm font-medium ${className}`}
+      style={style}
+    >
+      {children}
+    </div>
+  );
+}
 
 interface Location {
   id: string;
@@ -32,96 +48,85 @@ async function getLocations(): Promise<Location[]> {
   return data || [];
 }
 
-async function getSectionSettings(): Promise<LocationPoliciesSectionSettings> {
-  const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-  if (!clientId) return DEFAULT_THEME.location_policies_section_settings!;
-
-  const { data, error } = await supabase
-    .from('client_theme_settings')
-    .select('location_policies_section_settings')
-    .eq('client_id', clientId)
-    .maybeSingle();
-
-  if (error || !data?.location_policies_section_settings) {
-    return DEFAULT_THEME.location_policies_section_settings!;
-  }
-
-  return data.location_policies_section_settings;
-}
-
-export default async function CareersSection(): Promise<JSX.Element | null> {
-  const [multiLocation, settings, locations] = await Promise.all([
+export default async function CareersSection(): Promise<React.ReactElement | null> {
+  const [multiLocation, locations] = await Promise.all([
     isMultiLocation(),
-    getSectionSettings(),
     getLocations(),
   ]);
 
-  const sectionStyle = {
-    backgroundColor: settings.section_bg_color || 'var(--loc-section-bg)',
-  };
-  const badgeStyle = {
-    backgroundColor: settings.badge_bg_color || 'var(--loc-badge-bg)',
-    color: settings.badge_text_color || 'var(--loc-badge-text)',
-  };
-  const headingStyle = {
-    color: settings.heading_color || 'var(--loc-heading)',
-  };
-  const subheadingStyle = {
-    color: settings.subheading_color || 'var(--loc-subheading)',
-  };
-  const cardStyle = {
-    backgroundColor: settings.card_bg_color || 'var(--loc-card-bg)',
-    borderColor: settings.card_border_color || 'var(--loc-card-border)',
-  };
-  const buttonStyle = {
-    backgroundColor: settings.button_bg_color || 'var(--loc-button-bg)',
-    color: settings.button_text_color || 'var(--loc-button-text)',
-  };
-
-  const cityNames = locations.map(loc => loc.city);
-  const headingText = cityNames.length > 0 
-    ? `Insurance Careers in ${cityNames.join(', ')}`
-    : 'Insurance Careers';
-
   if (multiLocation && locations.length > 0) {
+    const cityNames = locations.map(loc => loc.city);
     return (
-      <section className="py-16 relative" style={sectionStyle}>
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4" style={badgeStyle}>
-              <span>Join Our Team</span>
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4" style={headingStyle}>
-              {headingText}
+      <section className="py-20 relative w-full overflow-hidden" style={{ background: 'linear-gradient(to bottom, #F6F8FA, #ffffff)' }}>
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20" style={{ background: 'radial-gradient(circle, #5b7c99, transparent)' }}></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20" style={{ background: 'radial-gradient(circle, #355F4E, transparent)' }}></div>
+        
+        <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Badge className="text-sm text-white" style={{ backgroundColor: '#5b7c9a' }}>
+                Join Our Team
+              </Badge>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+              <span className="text-black">Insurance Careers </span>
+              <span style={{ color: '#5b7c99' }}>in {cityNames.join(', ')}</span>
             </h2>
-            <p className="text-lg max-w-3xl mx-auto" style={subheadingStyle}>
+            <div className="w-32 h-1.5 rounded-full mx-auto mb-6" style={{ background: 'linear-gradient(to right, #5b7c99, #355F4E, #5b7c99)' }}></div>
+            <p className="text-lg md:text-xl text-theme-body max-w-3xl mx-auto leading-relaxed">
               Start your career in insurance with us.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {locations.map((location) => (
+          <div className="flex flex-wrap justify-center gap-8">
+            {locations.map((location, index) => (
               <Link
                 key={location.id}
                 href={`/locations/${location.location_slug}/apply`}
-                className="block"
+                className="block group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-sm"
               >
-                <div
-                  className="rounded-xl border p-8 hover:shadow-lg transition-all duration-300 h-full text-center"
-                  style={cardStyle}
-                >
-                  <h3 className="text-2xl font-heading font-bold mb-3" style={headingStyle}>
-                    {location.location_name}
-                  </h3>
-                  <p className="mb-6" style={subheadingStyle}>
-                    {location.city}, {location.state}
-                  </p>
-                  <span
-                    className="inline-block px-6 py-2 rounded-full font-medium"
-                    style={buttonStyle}
-                  >
-                    View Careers
-                  </span>
+                <div className="relative bg-white rounded-3xl border-2 border-transparent p-8 hover:border-[#5b7c99] hover:shadow-2xl transition-all duration-300 h-full flex flex-col hover:-translate-y-2 overflow-hidden shadow-md">
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-0 right-0 w-20 h-20 from-modern-primary-10 bg-gradient-to-br to-transparent rounded-bl-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300 bg-gradient-modern-primary">
+                        <Briefcase className="w-10 h-10 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold mb-3 text-center text-black group-hover:text-[#5b7c99] transition-colors">
+                      {location.location_name}
+                    </h3>
+                    <p className="text-center mb-6 text-theme-body font-medium">
+                      {location.city}, {location.state}
+                    </p>
+                    
+                    {/* Features list */}
+                    <div className="mb-8 space-y-2">
+                      <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
+                        <Users className="w-4 h-4" style={{ color: '#5b7c99' }} />
+                        <span>Growing Team</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
+                        <CheckCircle2 className="w-4 h-4 text-secondary" />
+                        <span>Career Growth</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-auto text-center">
+                      <span
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-primary-foreground shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:gap-3 transform group-hover:scale-105 bg-gradient-modern-primary"
+                      >
+                        View Careers
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -136,32 +141,62 @@ export default async function CareersSection(): Promise<JSX.Element | null> {
       : 'Insurance Careers';
 
     return (
-      <section className="py-16 relative" style={sectionStyle}>
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4" style={badgeStyle}>
-              <span>Join Our Team</span>
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4" style={headingStyle}>
-              {singleLocationHeading}
+      <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        
+        <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Badge className="text-sm text-secondary-foreground bg-secondary">
+                Join Our Team
+              </Badge>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+              <span className="text-theme-text">{singleLocationHeading}</span>
             </h2>
-            <p className="text-lg max-w-3xl mx-auto" style={subheadingStyle}>
+            <div className="w-32 h-1.5 rounded-full mx-auto mb-6 bg-gradient-modern-primary-secondary"></div>
+            <p className="text-lg md:text-xl text-theme-body max-w-3xl mx-auto leading-relaxed">
               Start your career in insurance with us.
             </p>
           </div>
           
           <div className="flex justify-center">
-            <Link href="/apply" className="block max-w-md w-full">
-              <div
-                className="rounded-xl border p-8 hover:shadow-lg transition-all duration-300 text-center"
-                style={cardStyle}
-              >
-                <span
-                  className="inline-block px-8 py-3 rounded-full font-medium text-lg"
-                  style={buttonStyle}
-                >
-                  View Careers
-                </span>
+            <Link href="/apply" className="block group w-full max-w-md">
+              <div className="relative bg-white rounded-3xl border-2 border-transparent p-10 hover:border-[#5b7c99] hover:shadow-2xl transition-all duration-300 flex flex-col hover:-translate-y-2 overflow-hidden shadow-lg text-center">
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                {/* Decorative corner accent */}
+                <div className="absolute top-0 right-0 w-24 h-24 from-modern-primary-10 bg-gradient-to-br to-transparent rounded-bl-full"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center mb-6">
+                    <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300 bg-gradient-modern-primary">
+                      <Briefcase className="w-10 h-10 text-primary-foreground" />
+                    </div>
+                  </div>
+                  
+                  {/* Features list */}
+                  <div className="mb-8 space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-theme-body">
+                      <Users className="w-5 h-5 text-primary" />
+                      <span>Growing Team</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-theme-body">
+                      <CheckCircle2 className="w-5 h-5 text-secondary" />
+                      <span>Career Growth Opportunities</span>
+                    </div>
+                  </div>
+                  
+                  <span
+                    className="inline-flex items-center gap-2 px-10 py-4 rounded-full font-semibold text-primary-foreground shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:gap-3 transform group-hover:scale-105 bg-gradient-modern-primary"
+                  >
+                    View Careers
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
               </div>
             </Link>
           </div>

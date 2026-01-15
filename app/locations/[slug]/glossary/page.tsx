@@ -6,6 +6,8 @@ import { getSupabaseClient } from '@/lib/supabase/server';
 import { injectClientData, stripHtmlTags } from '@/lib/utils/content-formatters';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
+import { getTemplateVariant } from '@/lib/variants';
+import ModernGlossaryPage from '@/components/variants/modern/glossary/GlossaryPage';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -131,9 +133,10 @@ export default async function LocationGlossaryPage({ params }: PageProps) {
     notFound();
   }
 
-  const [websiteData, clientData] = await Promise.all([
+  const [websiteData, clientData, variant] = await Promise.all([
     getWebsiteBySlug(slug),
     getClientData(),
+    getTemplateVariant(),
   ]);
 
   if (!websiteData) {
@@ -176,6 +179,28 @@ export default async function LocationGlossaryPage({ params }: PageProps) {
     ...new Set(processedTerms.map((term) => term.term.charAt(0).toUpperCase())),
   ].sort();
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernGlossaryPage
+          termsByCategory={termsByCategory}
+          sortedCategories={sortedCategories}
+          firstLetters={firstLetters}
+          locationName={locationName}
+          slug={slug}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generateLdJsonSchema(clientData, locationName)),
+          }}
+        />
+      </>
+    );
+  }
+
+  // Default variant
   return (
     <main className="flex-grow">
       {/* Glossary Hero */}

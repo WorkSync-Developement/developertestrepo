@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import BlogPosts from 'components/blog/BlogPosts';
 import { getAllTopics, getPostsByTopic } from 'lib/blog';
 import { getSchemaDefaults, buildPageUrl, buildOpeningHoursSpec } from '@/lib/structured-data';
@@ -9,6 +10,7 @@ import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website
 import { getClientData } from '@/lib/client';
 import { getLocationIdBySlug } from '@/lib/utils';
 import { Divider } from '@/components/ui/Divider';
+import { getTemplateVariant } from '@/lib/variants';
 
 interface PageProps {
   params: Promise<{ slug: string; topic: string }>;
@@ -91,6 +93,9 @@ export default async function LocationTopicPage({ params }: PageProps) {
     notFound();
   }
 
+  // Get variant for styling
+  const variant = await getTemplateVariant();
+
   // Get topics and client data
   const [topics, clientData, websiteData] = await Promise.all([
     getAllTopics(slug),
@@ -165,10 +170,22 @@ export default async function LocationTopicPage({ params }: PageProps) {
         <section className="py-16 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
           <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
             <div className="mb-8">
-              <Link href={`/locations/${slug}/blog`} className="text-blue-600 hover:underline mb-4 inline-flex items-center">
-                <img src="/Images/icons/arrow-left.svg" alt="Arrow Left" className="h-4 w-4 mr-1" />
-                Back to All Topics
-              </Link>
+              {variant === 'modern' ? (
+                <Link 
+                  href={`/locations/${slug}/blog`} 
+                  className="group inline-flex items-center gap-2 font-medium text-primary hover:text-primary/80 mb-4 transition-all"
+                >
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-modern-primary-10 hover:bg-modern-primary-20 border border-modern-primary-30 hover:border-primary transition-all">
+                    <ArrowLeft size={16} className="transform group-hover:-translate-x-1 transition-transform" />
+                    <span>Back to All Topics</span>
+                  </div>
+                </Link>
+              ) : (
+                <Link href={`/locations/${slug}/blog`} className="text-blue-600 hover:underline mb-4 inline-flex items-center">
+                  <img src="/Images/icons/arrow-left.svg" alt="Arrow Left" className="h-4 w-4 mr-1" />
+                  Back to All Topics
+                </Link>
+              )}
               <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary mt-4 mb-4">
                 {topic.name}
               </h1>

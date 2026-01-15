@@ -1,9 +1,21 @@
-"use client"
+import { isMultiLocation, getAllWebsites } from '@/lib/website';
+import { Star, CheckCircle2, Users } from 'lucide-react';
+import HeroCTAButton from './HeroCTAButton';
 
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+export async function Hero() {
+  const [multiLocation, locations] = await Promise.all([
+    isMultiLocation(),
+    getAllWebsites()
+  ]);
 
-export function Hero() {
+  const locationData = locations?.map(loc => ({
+    id: loc.id,
+    location_name: `${loc.city}, ${loc.state}`,
+    city: loc.city,
+    state: loc.state,
+    location_slug: loc.location_slug,
+  })) || [];
+
   return (
     <section className="relative min-h-[600px] bg-gradient-to-b from-primary/10 to-background overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
@@ -15,27 +27,26 @@ export function Hero() {
           </div> */}
 
           {/* Main Heading */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-text-dark leading-tight max-w-3xl">
-            Protecting What <span style={{ color: '#5b7c99' }}>Matters Most</span>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-theme-text leading-tight max-w-3xl">
+            Protecting What <span className="text-primary">Matters Most</span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-lg sm:text-xl text-text-light max-w-2xl leading-relaxed">
+          <p className="text-lg sm:text-xl text-theme-body max-w-2xl leading-relaxed">
             Your trusted insurance partner serving communities across Georgia with personalized coverage for home, auto,
             and business.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Button size="lg" className="text-white gap-2" style={{ backgroundColor: '#5b7c99' }}>
-              Find a Location
-              <ArrowRight size={18} />
-            </Button>
+            <HeroCTAButton 
+              isMultiLocation={multiLocation}
+              locations={locationData}
+            />
             {/* <Button
               size="lg"
               variant="outline"
-              className="bg-transparent"
-              style={{ borderColor: '#5b7c99', color: '#5b7c99' }}
+              className="bg-transparent border-primary text-primary"
             >
               Get a Quote
             </Button> */}
@@ -44,24 +55,24 @@ export function Hero() {
           {/* Trust Indicators */}
           <div className="flex flex-wrap justify-center gap-6 pt-12">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">⭐</span>
-              <span className="text-sm text-text-light font-medium">5-Star Reviews</span>
+              <Star className="w-5 h-5 text-primary fill-primary" />
+              <span className="text-sm text-theme-body font-medium">5-Star Reviews</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">✓</span>
-              <span className="text-sm text-text-light font-medium">Family Owned</span>
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span className="text-sm text-theme-body font-medium">Family Owned</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🤝</span>
-              <span className="text-sm text-text-light font-medium">Local Experts</span>
+              <Users className="w-5 h-5 text-primary" />
+              <span className="text-sm text-theme-body font-medium">Local Experts</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2" style={{ backgroundColor: 'rgba(91, 124, 153, 0.05)' }}></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2" style={{ backgroundColor: 'rgba(91, 124, 153, 0.05)' }}></div>
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 bg-modern-primary-5"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 bg-modern-primary-5"></div>
     </section>
   )
 }

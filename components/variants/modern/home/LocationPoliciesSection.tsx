@@ -1,10 +1,26 @@
 import React from 'react';
 import Link from 'next/link';
+import { MapPin, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { Badge } from '@/components/ui/Badge';
 import { isMultiLocation } from '@/lib/website';
-import type { LocationPoliciesSectionSettings } from '@/lib/types/theme';
-import { DEFAULT_THEME } from '@/lib/theme/defaults';
+
+// Local Badge component for modern variant
+interface BadgeProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+function Badge({ children, className = '', style }: BadgeProps) {
+  return (
+    <div
+      className={`inline-block rounded-full px-4 py-1 text-sm font-medium ${className}`}
+      style={style}
+    >
+      {children}
+    </div>
+  );
+}
 
 interface PolicyPage {
   id: string;
@@ -58,100 +74,89 @@ async function getLocations(): Promise<Location[]> {
   return data || [];
 }
 
-async function getSectionSettings(): Promise<LocationPoliciesSectionSettings> {
-  const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-  if (!clientId) return DEFAULT_THEME.location_policies_section_settings!;
 
-  const { data, error } = await supabase
-    .from('client_theme_settings')
-    .select('location_policies_section_settings')
-    .eq('client_id', clientId)
-    .maybeSingle();
-
-  if (error || !data?.location_policies_section_settings) {
-    return DEFAULT_THEME.location_policies_section_settings!;
-  }
-
-  return data.location_policies_section_settings;
-}
-
-export default async function LocationPoliciesSection(): Promise<JSX.Element | null> {
-  const [multiLocation, settings] = await Promise.all([
-    isMultiLocation(),
-    getSectionSettings(),
-  ]);
-
-  const sectionStyle = {
-    backgroundColor: settings.section_bg_color || 'var(--loc-section-bg)',
-  };
-  const badgeStyle = {
-    backgroundColor: settings.badge_bg_color || 'var(--loc-badge-bg)',
-    color: settings.badge_text_color || 'var(--loc-badge-text)',
-  };
-  const headingStyle = {
-    color: settings.heading_color || 'var(--loc-heading)',
-  };
-  const subheadingStyle = {
-    color: settings.subheading_color || 'var(--loc-subheading)',
-  };
-  const cardStyle = {
-    backgroundColor: settings.card_bg_color || 'var(--loc-card-bg)',
-    borderColor: settings.card_border_color || 'var(--loc-card-border)',
-  };
-  const cardHeadingStyle = {
-    color: settings.card_heading_color || 'var(--loc-card-heading)',
-  };
-  const cardBodyStyle = {
-    color: settings.card_body_color || 'var(--loc-card-body)',
-  };
-  const buttonStyle = {
-    backgroundColor: settings.button_bg_color || 'var(--loc-button-bg)',
-    color: settings.button_text_color || 'var(--loc-button-text)',
-  };
+export default async function LocationPoliciesSection(): Promise<React.ReactElement | null> {
+  const multiLocation = await isMultiLocation();
 
   if (multiLocation) {
     const locations = await getLocations();
     if (locations.length === 0) return null;
 
     return (
-      <section className="py-16 relative" style={sectionStyle}>
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4" style={badgeStyle}>
-              <span>Insurance by Location</span>
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4" style={headingStyle}>
-              Find Coverage Near You
+      <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        
+        <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Badge className="text-sm text-secondary-foreground bg-secondary">
+                Insurance by Location
+              </Badge>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+              <span className="text-theme-text">Find Coverage </span>
+              <span className="text-primary">Near You</span>
             </h2>
-            <p className="text-lg max-w-3xl mx-auto" style={subheadingStyle}>
+            <div className="w-32 h-1.5 rounded-full mx-auto mb-6 bg-gradient-modern-primary-secondary"></div>
+            <p className="text-lg md:text-xl text-theme-body max-w-3xl mx-auto leading-relaxed">
               Explore insurance policies available at each of our locations.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {locations.map((location) => (
+          <div className="flex flex-wrap justify-center gap-8">
+            {locations.map((location, index) => (
               <Link
                 href={`/locations/${location.location_slug}/policies`}
                 key={location.id}
-                className="block"
+                className="block group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-sm"
               >
-                <div
-                  className="rounded-xl border p-8 hover:shadow-lg transition-all duration-300 h-full"
-                  style={cardStyle}
-                >
-                  <h3 className="text-2xl font-heading font-bold mb-3 text-center" style={cardHeadingStyle}>
-                    {location.location_name}
-                  </h3>
-                  <p className="text-center mb-6" style={cardBodyStyle}>
-                    {location.city}, {location.state}
-                  </p>
-                  <div className="text-center">
-                    <span
-                      className="inline-block px-6 py-2 rounded-full font-medium transition-colors"
-                      style={buttonStyle}
-                    >
-                      View Policies
-                    </span>
+                <div className=" shadow-md relative bg-theme-bg rounded-3xl border-2 border-transparent p-8 hover:border-primary hover:shadow-2xl transition-all duration-300 h-full flex flex-col hover:-translate-y-2 overflow-hidden">
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-0 right-0 w-20 h-20 from-modern-primary-10 bg-gradient-to-br to-transparent rounded-bl-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="relative">
+                        <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300 bg-gradient-modern-primary">
+                          <MapPin className="w-10 h-10 text-primary-foreground" />
+                        </div>
+                        {/* <div className="absolute -top-1 -right-1 w-6 h-6 bg-secondary rounded-full flex items-center justify-center">
+                          <CheckCircle2 className="w-4 h-4 text-secondary-foreground" />
+                        </div> */}
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold mb-3 text-center text-theme-text group-hover:text-primary transition-colors">
+                      {location.location_name}
+                    </h3>
+                    <p className="text-center mb-6 text-theme-body font-medium">
+                      {location.city}, {location.state}
+                    </p>
+                    
+                    {/* Features list */}
+                    <div className="mb-8 space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-theme-body">
+                        <Shield className="w-4 h-4 text-primary" />
+                        <span>Full Coverage Available</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-theme-body">
+                        <CheckCircle2 className="w-4 h-4 text-secondary" />
+                        <span>Expert Local Team</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-auto text-center">
+                      <span
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-primary-foreground shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:gap-3 transform group-hover:scale-105 bg-gradient-modern-primary"
+                      >
+                        View Policies
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -165,46 +170,76 @@ export default async function LocationPoliciesSection(): Promise<JSX.Element | n
     if (policyPages.length === 0) return null;
 
     return (
-      <section className="py-16 relative" style={sectionStyle}>
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4" style={badgeStyle}>
-              <span>Our Services</span>
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4" style={headingStyle}>
-              Insurance Solutions For You
+      <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        
+        <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Badge className="text-sm text-secondary-foreground bg-secondary">
+                Our Services
+              </Badge>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+              <span className="text-theme-text">Insurance Solutions </span>
+              <span className="text-primary">For You</span>
             </h2>
-            <p className="text-lg max-w-3xl mx-auto" style={subheadingStyle}>
+            <div className="w-32 h-1.5 rounded-full mx-auto mb-6 bg-gradient-modern-primary-secondary"></div>
+            <p className="text-lg md:text-xl text-theme-body max-w-3xl mx-auto leading-relaxed">
               Explore our comprehensive insurance coverage options.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {policyPages.map((policy) => (
-              <Link
-                href={`/policies/${policy.slug}`}
-                key={policy.id}
-                className="block"
-              >
-                <div
-                  className="rounded-xl border p-6 hover:shadow-lg transition-all duration-300 h-full text-center"
-                  style={cardStyle}
+          <div className="flex flex-wrap justify-center gap-6">
+            {policyPages.map((policy, index) => {
+              // Use CSS variable-based classes instead of hardcoded colors
+              const gradientClasses = [
+                'bg-gradient-modern-primary',
+                'bg-gradient-modern-primary',
+                'bg-gradient-modern-primary',
+                'bg-gradient-modern-primary',
+                'bg-gradient-modern-primary',
+              ];
+              const gradientClass = gradientClasses[index % gradientClasses.length];
+              
+              return (
+                <Link
+                  href={`/policies/${policy.slug}`}
+                  key={policy.id}
+                  className="block group w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(20%-0.96rem)] max-w-xs"
                 >
-                  <h3 className="text-xl font-heading font-bold mb-3" style={cardHeadingStyle}>
-                    {policy.title}
-                  </h3>
-                  <p className="text-sm mb-4" style={cardBodyStyle}>
-                    {policy.content_summary}
-                  </p>
-                  <span
-                    className="inline-block px-4 py-2 rounded-full text-sm font-medium"
-                    style={buttonStyle}
-                  >
-                    Learn More
-                  </span>
-                </div>
-              </Link>
-            ))}
+                  <div className="relative bg-theme-bg rounded-3xl border-2 border-transparent p-6 hover:border-primary hover:shadow-2xl transition-all duration-300 h-full text-center flex flex-col hover:-translate-y-2 overflow-hidden">
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Decorative corner accent */}
+                    <div className="absolute top-0 right-0 w-16 h-16 from-modern-primary-10 bg-gradient-to-br to-transparent rounded-bl-full"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-center mb-4">
+                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-md transform group-hover:scale-110 transition-transform duration-300 ${gradientClass}`}>
+                          <Shield className="w-7 h-7 text-primary-foreground" />
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-heading font-bold mb-3 text-theme-text group-hover:text-primary transition-colors">
+                        {policy.title}
+                      </h3>
+                      <p className="text-sm mb-6 text-theme-body flex-grow leading-relaxed">
+                        {policy.content_summary}
+                      </p>
+                      <span
+                        className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-primary-foreground shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:gap-3 transform group-hover:scale-105 ${gradientClass}`}
+                      >
+                        Learn More
+                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

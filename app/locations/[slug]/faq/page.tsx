@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { HelpCircle, Phone } from 'lucide-react';
 import FAQSearch from 'components/faq/FAQSearch';
 import FAQItems from 'components/faq/FAQItems';
+import ModernFAQPage from '@/components/variants/modern/faq/FAQPage';
 import BackToTop from 'components/ui/BackToTop';
 import { Divider } from '@/components/ui/Divider';
 import { getClientData } from '@/lib/client';
@@ -14,6 +15,7 @@ import { interpolateTemplate, buildTemplateContext } from '@/lib/template-variab
 import { getBusinessInfo } from '@/lib/business-info';
 import { normalizePhoneNumber, getLocationIdBySlug } from '@/lib/utils';
 import { getAggregatedFAQs } from '@/lib/faq';
+import { getTemplateVariant } from '@/lib/variants';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -122,11 +124,12 @@ export default async function LocationFAQPage({ params }: PageProps) {
     notFound();
   }
 
-  const [websiteData, clientData, aggregatedFAQs, businessInfo] = await Promise.all([
+  const [websiteData, clientData, aggregatedFAQs, businessInfo, variant] = await Promise.all([
     getWebsiteBySlug(slug),
     getClientData(),
     getAggregatedFAQs(locationId),
     getBusinessInfo(),
+    getTemplateVariant(),
   ]);
 
   if (!websiteData) {
@@ -181,6 +184,28 @@ export default async function LocationFAQPage({ params }: PageProps) {
   const phone = websiteData?.phone || clientData?.phone || '';
   const phoneTel = normalizePhoneNumber(phone);
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernFAQPage
+          faqPolicies={faqPolicies}
+          locationName={locationName}
+          slug={slug}
+          phone={phone}
+          phoneTel={phoneTel}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generateLdJsonSchema(faqPolicies, clientData, websiteData, slug)),
+          }}
+        />
+      </>
+    );
+  }
+
+  // Default variant
   return (
     <main>
       {/* Hero Section */}
