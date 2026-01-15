@@ -41,7 +41,7 @@ export default function RelatedTermsSection({ terms }: RelatedTermsSectionProps)
                 href={`/glossary/${term.slug}`}
                 className="bg-card-bg rounded-lg p-4 shadow-sm border border-card-border hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:border-secondary h-20 flex items-center justify-center text-center"
               >
-                <span className="text-primary font-semibold hover:text-[#003366] line-clamp-2">
+                <span className="text-primary font-semibold hover:text-primary line-clamp-2">
                   {term.term}
                 </span>
               </Link>

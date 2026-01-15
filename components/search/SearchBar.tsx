@@ -87,7 +87,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           className={`p-2 flex items-center justify-center ${
             variant === 'header' 
               ? 'text-primary hover:text-accent' 
-              : 'bg-accent text-accent-foreground hover:bg-[#003366] px-4'
+              : 'bg-accent text-accent-foreground hover:bg-primary px-4'
           } transition-colors`}
         >
           <SearchIcon className={`${variant === 'header' ? 'h-5 w-5' : 'h-6 w-6'}`} />

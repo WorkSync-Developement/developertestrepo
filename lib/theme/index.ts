@@ -108,11 +108,11 @@ export function themeToCssVars(theme: ThemeSettings): Record<string, string> {
     
     // Navbar settings (from navbar_settings column)
     '--navbar-height': theme.navbar_settings?.height ? `${theme.navbar_settings.height}px` : 'auto',
-    '--navbar-bg-color': theme.navbar_settings?.bg_color ?? '#FFFFFF',
+    '--navbar-bg-color': theme.navbar_settings?.bg_color ?? theme.color_primary,
     '--navbar-bg-opacity': String(theme.navbar_settings?.bg_opacity ?? DEFAULT_THEME.navbar_settings!.bg_opacity),
-    '--navbar-text-color': theme.navbar_settings?.text_color ?? theme.color_primary,
+    '--navbar-text-color': theme.navbar_settings?.text_color ?? theme.color_primary_foreground,
     '--navbar-text-hover-color': theme.navbar_settings?.text_hover_color ?? theme.color_accent,
-    '--navbar-agency-name-color': theme.navbar_settings?.agency_name_color ?? theme.color_primary,
+    '--navbar-agency-name-color': theme.navbar_settings?.agency_name_color ?? theme.color_primary_foreground,
     
     // CTA settings (from cta_settings column)
     '--cta-bg-color': theme.cta_settings?.bg_color ?? `${theme.color_secondary}4D`, // 30% opacity

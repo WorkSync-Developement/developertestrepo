@@ -44,7 +44,7 @@ export default function BlogTopics({ topics, basePath = '/blog' }: { topics: any
               </div>
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#004080] bg-[#A7D8DE]/30 px-2 py-1 rounded">
+                  <span className="text-sm text-primary bg-secondary/30 px-2 py-1 rounded">
                     Insurance
                   </span>
                   <div className="text-sm text-theme-body flex items-center">
@@ -52,7 +52,7 @@ export default function BlogTopics({ topics, basePath = '/blog' }: { topics: any
                     <span>{topic.postCount} {topic.postCount === 1 ? 'Article' : 'Articles'}</span>
                   </div>
                 </div>
-                <h2 className="text-xl font-heading font-semibold text-primary mb-2 hover:text-[#003366]">
+                <h2 className="text-xl font-heading font-semibold text-primary mb-2 hover:text-primary">
                   <Link href={`${basePath}/${topic.slug}`}>
                     {topic.name}
                   </Link>
@@ -96,7 +96,7 @@ export default function BlogTopics({ topics, basePath = '/blog' }: { topics: any
                 disabled={currentPage === 1}
                 className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${currentPage === 1
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-accent text-accent-foreground hover:bg-[#003366] shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                  : 'bg-accent text-accent-foreground hover:bg-primary shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
                   }`}
                 aria-label="Previous page"
               >
@@ -122,7 +122,7 @@ export default function BlogTopics({ topics, basePath = '/blog' }: { topics: any
                 disabled={currentPage === totalPages}
                 className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${currentPage === totalPages
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-accent text-accent-foreground hover:bg-[#003366] shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                  : 'bg-accent text-accent-foreground hover:bg-primary shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
                   }`}
                 aria-label="Next page"
               >

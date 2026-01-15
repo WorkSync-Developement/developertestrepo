@@ -145,41 +145,106 @@ const IntroSection = async () => {
   };
 
   return (
-    <section className="py-20 bg-theme-bg relative w-full">
+    <section className="py-16 sm:py-24 bg-background relative w-full overflow-hidden">
       {renderDivider()}
       
-      <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-        <div className={introContent?.image?.url ? "grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center" : ""}>
-          {/* Left Column - Image */}
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-5"
+        style={{
+          background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }} 
+      />
+      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full opacity-5"
+        style={{
+          background: 'radial-gradient(circle, var(--color-primary) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }} 
+      />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className={introContent?.image?.url ? "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center" : ""}>
+          {/* Left Column - Image with Enhanced Depth */}
           {introContent?.image?.url && (
-            <div className={`relative rounded-2xl overflow-hidden shadow-lg ${imageClasses} animate-fade-in-right`}>
+            <div className={`relative rounded-3xl overflow-hidden group ${imageClasses} animate-fade-in-right`}
+              style={{
+                boxShadow: 'var(--shadow-2xl)',
+              }}>
               <Image 
                 src={introContent.image.url} 
                 alt="Agency introduction image" 
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              {/* Semi-transparent overlay */}
-              <div className="absolute inset-0 bg-theme-bg/20"></div>
-              <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 lg:bottom-8 lg:left-8 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-md">
-                <p className="text-primary font-medium text-base lg:text-lg xl:text-xl">{introContent?.image_tag?.content || ''}</p>
+              
+              {/* Gradient Overlay for Depth */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/30"></div>
+              
+              {/* Decorative Border */}
+              <div className="absolute inset-0 rounded-3xl"
+                style={{
+                  border: '3px solid rgba(212, 175, 55, 0.3)',
+                }}
+              />
+              
+              {/* Premium Image Tag */}
+              <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 lg:bottom-10 lg:left-10 backdrop-blur-md rounded-2xl px-6 py-4 transition-all duration-300 group-hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+                  boxShadow: 'var(--shadow-xl)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full animate-pulse"
+                    style={{ background: 'var(--color-accent)' }}
+                  />
+                  <p className="font-bold text-base lg:text-lg xl:text-xl"
+                    style={{ 
+                      color: 'var(--color-primary)',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+                    }}>
+                    {introContent?.image_tag?.content || ''}
+                  </p>
+                </div>
               </div>
             </div>
           )}
           
-          {/* Right Column - About Content */}
-          <div className="animate-fade-in-left">
-            <BadgeSmall className="mb-4 text-sm md:text-base lg:text-lg">
-              {introContent?.tagline?.content || ''}
-            </BadgeSmall>
+          {/* Right Column - Content */}
+          <div className="space-y-6">
+            {/* Heading */}
+            <div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
+                {introContent?.title?.content || ''}
+              </h2>
+            </div>
             
-            <h2 className="section-title text-3xl md:text-4xl lg:text-5xl mb-6">{introContent?.title?.content || ''}</h2>
+            {/* Paragraphs with Enhanced Readability */}
+            <div className="space-y-4">
+              {paragraphs?.map((paragraph, index) => (
+                <p key={index} 
+                  className="text-base sm:text-lg leading-relaxed text-muted-foreground">
+                  {paragraph?.content || ''}
+                </p>
+              ))}
+            </div>
             
-            {paragraphs?.map((paragraph, index) => (
-              <p key={index} className={`text-theme-body text-base md:text-lg lg:text-xl leading-relaxed ${index === paragraphs?.length - 1 ? 'mb-8' : 'mb-6'}`}>
-                {paragraph?.content || ''}
-              </p>
-            ))}
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap gap-6 pt-4">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="font-semibold text-foreground">Licensed & Insured</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                </svg>
+                <span className="font-semibold text-foreground">Expert Team</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

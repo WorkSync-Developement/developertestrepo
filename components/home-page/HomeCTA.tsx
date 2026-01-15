@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { getClientData } from '@/lib/client';
 import { isMultiLocation } from '@/lib/website';
 import { Divider } from '@/components/ui/Divider';
+import { formatPhoneNumber, normalizePhoneNumber } from '@/lib/utils';
 
 interface CTASectionStyles {
   gradient?: {
@@ -105,150 +106,62 @@ const HomeCTA = async () => {
 
   const subtitle = ctaContent?.subtitle?.content || 'Ready to Get Started?';
   const description = ctaContent?.description?.content || 'Contact us today to learn how we can help protect what matters most.';
-  const city = clientData?.city;
-  const state = clientData?.state;
-  const styles = ctaContent?.styles;
-
-  // Build dynamic styles
-  const gradientDirection = GRADIENT_MAP[styles?.gradient?.direction || 'to-r'] || 'to right';
-  const gradientStart = styles?.gradient?.startColor || 'var(--color-background-alt)';
-  const gradientEnd = styles?.gradient?.endColor || 'var(--color-primary-80)';
   
-  const sectionStyle: React.CSSProperties = {
-    background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`,
-  };
-
-  // Card styles
-  const cardBgMode = styles?.card?.backgroundMode || 'transparent';
-  const cardBgColor = styles?.card?.backgroundColor || '#ffffff';
-  const cardBgOpacity = styles?.card?.backgroundOpacity ?? 10;
-  const cardBorderColor = styles?.card?.borderColor || 'rgba(255, 255, 255, 0.2)';
-  
-  const cardStyle: React.CSSProperties = cardBgMode === 'solid' 
-    ? {
-        backgroundColor: cardBgColor,
-        borderColor: cardBorderColor,
-      }
-    : {
-        backgroundColor: `color-mix(in srgb, ${cardBgColor} ${cardBgOpacity}%, transparent)`,
-        borderColor: cardBorderColor,
-      };
-
-  // Typography styles
-  const headingColor = styles?.typography?.headingColor || 'inherit';
-  const bodyColor = styles?.typography?.bodyColor || 'inherit';
-
-  // Icon container styles
-  const iconBgColor = styles?.iconContainer?.backgroundColor || '#ffffff';
-  const iconBgOpacity = styles?.iconContainer?.backgroundOpacity ?? 15;
-  const iconContainerStyle: React.CSSProperties = {
-    backgroundColor: `color-mix(in srgb, ${iconBgColor} ${iconBgOpacity}%, transparent)`,
-  };
-
-  // Button styles
-  const buttonBgColor = styles?.button?.backgroundColor || '#ffffff';
-  const buttonTextColor = styles?.button?.textColor || 'var(--color-primary)';
-  const buttonHoverBgColor = styles?.button?.hoverBackgroundColor || null;
-  const buttonStyle: React.CSSProperties = {
-    backgroundColor: buttonBgColor,
-    color: buttonTextColor,
-  };
-
-  // Card hover color
-  const cardHoverBgColor = styles?.card?.hoverBackgroundColor || null;
-
-  // CSS custom properties for hover states (injected via style tag)
-  const customStyles = `
-    .cta-card:hover {
-      ${cardHoverBgColor ? `background-color: ${cardHoverBgColor} !important;` : ''}
-    }
-    .cta-button:hover {
-      ${buttonHoverBgColor ? `background-color: ${buttonHoverBgColor} !important;` : 'opacity: 0.9;'}
-    }
-  `;
-
-  // Determine grid columns based on location count
-  const locationCount = locations.length;
-  const gridCols = locationCount === 1 
-    ? 'grid-cols-1 max-w-md' 
-    : locationCount === 2 
-      ? 'grid-cols-1 md:grid-cols-2 max-w-4xl' 
-      : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl';
+  const formattedPhone = clientData?.phone ? formatPhoneNumber(clientData.phone) : '(555) 123-4567';
 
   return (
-    <section className="py-16 text-primary-foreground relative" style={sectionStyle}>
-      <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+    <section className="w-full py-16 sm:py-24 bg-primary">
       <Divider position="top" />
       
-      <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-            {subtitle}
-          </h2>
-          <p className="text-primary-foreground/90 max-w-2xl mx-auto text-lg">
-            {description}
-          </p>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-6">{subtitle}</h2>
+        
+        <p className="text-lg text-primary-foreground mb-8 max-w-2xl mx-auto">
+          {description}
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {multiLocation && locations.length > 0 ? (
+            <>
+              <Link 
+                href="/locations"
+                className="px-8 py-3 rounded-lg bg-primary-foreground text-primary font-semibold hover:opacity-90 transition"
+              >
+                Find a Location
+              </Link>
+              <Link 
+                href="/contact"
+                className="px-8 py-3 rounded-lg border-2 border-primary-foreground text-primary-foreground font-semibold hover:bg-primary-foreground/10 transition"
+              >
+                Request a Consultation
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link 
+                href="/contact"
+                className="px-8 py-3 rounded-lg bg-primary-foreground text-primary font-semibold hover:opacity-90 transition"
+              >
+                Request a Consultation
+              </Link>
+              {clientData?.phone && (
+                <a 
+                  href={`tel:${normalizePhoneNumber(clientData.phone)}`}
+                  className="px-8 py-3 rounded-lg border-2 border-primary-foreground text-primary-foreground font-semibold hover:bg-primary-foreground/10 transition"
+                >
+                  Call Us Today
+                </a>
+              )}
+            </>
+          )}
         </div>
         
-        {multiLocation && locations.length > 0 ? (
-          // Multi-location: Show location cards linking to contact pages
-          <div className={`grid ${gridCols} gap-8 mx-auto`}>
-            {locations.map((location) => (
-              <Link
-                key={location.id}
-                href={`/locations/${location.location_slug}/contact`}
-                className="block"
-              >
-                <div 
-                  className="cta-card backdrop-blur-sm rounded-lg p-8 text-center border transition-all shadow-lg transform hover:-translate-y-1 duration-300 h-full"
-                  style={cardStyle}
-                >
-                  <div className="rounded-full p-4 inline-flex mb-4" style={iconContainerStyle}>
-                    <img src="/Images/icons/map-pin.svg" alt="Location" width={32} height={32} />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3" style={{ color: headingColor }}>
-                    {location.location_name}
-                  </h3>
-                  <p className="mb-5" style={{ color: bodyColor, opacity: 0.8 }}>
-                    {location.city}, {location.state}
-                  </p>
-                  <span 
-                    className="cta-button inline-flex items-center justify-center font-bold rounded-full py-3 px-6 transition-colors"
-                    style={buttonStyle}
-                  >
-                    Contact Us
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          // Single-location: Show single contact card
-          <div className="grid grid-cols-1 max-w-md mx-auto">
-            <Link href="/contact" className="block">
-              <div 
-                className="cta-card backdrop-blur-sm rounded-lg p-8 text-center border transition-all shadow-lg transform hover:-translate-y-1 duration-300"
-                style={cardStyle}
-              >
-                <div className="rounded-full p-4 inline-flex mb-4" style={iconContainerStyle}>
-                  <img src="/Images/icons/map-pin.svg" alt="Location" width={32} height={32} />
-                </div>
-                <h3 className="text-2xl font-bold mb-3" style={{ color: headingColor }}>
-                  {clientData?.agency_name || 'Our Office'}
-                </h3>
-                <p className="mb-5" style={{ color: bodyColor, opacity: 0.8 }}>
-                  {city && state ? `${city}, ${state}` : 'Get in touch with us'}
-                </p>
-                <span 
-                  className="cta-button inline-flex items-center justify-center font-bold rounded-full py-3 px-6 transition-colors"
-                  style={buttonStyle}
-                >
-                  Contact Us
-                </span>
-              </div>
-            </Link>
-          </div>
-        )}
+        {/* Divider */}
+        <div className="mt-12 pt-12 border-t border-primary-foreground/20">
+          <p className="text-primary-foreground text-sm">
+            Available Monday - Friday, 9 AM - 5 PM {formattedPhone && `| ${formattedPhone}`}
+          </p>
+        </div>
       </div>
     </section>
   );
