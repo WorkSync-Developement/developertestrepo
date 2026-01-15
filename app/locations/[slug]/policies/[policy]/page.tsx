@@ -324,8 +324,8 @@ export default async function LocationPolicyPage({ params }: PageProps) {
 
   // Fallback contact info
   const contactInfo = {
-    phone_number: websiteData.client_locations?.phone || clientData?.phone_number || '',
-    email: websiteData.client_locations?.email || clientData?.email || '',
+    phone_number: websiteData.client_locations?.phone || clientData?.phone || '',
+    email: websiteData.client_locations?.email || clientData?.contact_email || '',
   };
 
   return (
