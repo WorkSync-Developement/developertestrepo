@@ -1,13 +1,7 @@
-import React from 'react';
-import { Metadata } from 'next';
-import HeroSection from '@/components/home-page/HeroSection';
-import IntroSection from '@/components/home-page/IntroSection';
-import LocationPoliciesSection from '@/components/home-page/LocationPoliciesSection';
-import Testimonials from '@/components/home-page/TestimonialsWrapper';
-import HomeCTA from '@/components/home-page/HomeCTA';
-import FAQPreview from '@/components/home-page/FAQPreviewWrapper';
-import InsuranceCareersSection from '@/components/home-page/InsuranceCareersSection';
-import { getClientData } from '@/lib/client';
+import React from "react";
+import { Metadata } from "next";
+import { getVariantComponent } from "@/lib/variants";
+import { getClientData } from "@/lib/client";
 
 // Page-specific metadata overrides - inherits from layout.tsx
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `${agencyName} | Your Trusted ${city} Insurance Partner`,
 
     // Homepage-specific description (under 150 characters)
-    description: `${agencyName} is a trusted insurance agency in ${city}, ${clientMetadata?.state || ''}. Auto, home, life & business coverage.`,
+    description: `${agencyName} is a trusted insurance agency in ${city}, ${clientMetadata?.state || ""}. Auto, home, life & business coverage.`,
 
     // Page-specific OpenGraph overrides
     openGraph: {
@@ -37,8 +31,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export default async function Home() {
+  const HeroSection = await getVariantComponent("HeroSection");
+  const IntroSection = await getVariantComponent("IntroSection");
+  const LocationPoliciesSection = await getVariantComponent("LocationPoliciesSection");
+  const Testimonials = await getVariantComponent("Testimonials");
+  const HomeCTA = await getVariantComponent("HomeCTA");
+  const FAQPreview = await getVariantComponent("FAQPreview");
+  const CareersSection = await getVariantComponent("CareersSection");
 
-export default function Home() {
   return (
     <div className="home-content">
       <HeroSection />
@@ -47,7 +48,7 @@ export default function Home() {
       <Testimonials />
       <HomeCTA />
       <FAQPreview />
-      <InsuranceCareersSection />
+      <CareersSection />
     </div>
   );
 }
