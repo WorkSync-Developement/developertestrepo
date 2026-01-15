@@ -6,7 +6,7 @@ import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getSchemaDefaults, buildPageUrl } from '@/lib/structured-data';
 import { getAllPolicies } from '@/lib/policy-categories';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient, getSupabaseClientForBuildTime } from '@/lib/supabase/server';
 import { validateRelatedPolicies } from '@/lib/policy-validation';
 
 interface PageProps {
@@ -16,12 +16,12 @@ interface PageProps {
 /**
  * Get a single policy by slug for a specific location (prioritizing location-specific override)
  */
-async function getPolicyBySlugForLocation(policySlug: string, locationId: string) {
+async function getPolicyBySlugForLocation(policySlug: string, locationId: string, supabaseClient: Awaited<ReturnType<typeof getSupabaseClient>>) {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
   if (!clientId) return null;
 
   // 1. Try to find a location-specific policy override
-  const { data: locationPolicy, error: locationError } = await supabase
+  const { data: locationPolicy, error: locationError } = await supabaseClient
     .from('client_policy_pages')
     .select('*')
     .eq('client_id', clientId)
@@ -37,7 +37,7 @@ async function getPolicyBySlugForLocation(policySlug: string, locationId: string
   }
 
   // 2. Fallback to global policy
-  const { data: globalPolicy, error: globalError } = await supabase
+  const { data: globalPolicy, error: globalError } = await supabaseClient
     .from('client_policy_pages')
     .select('*')
     .eq('client_id', clientId)
@@ -110,7 +110,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const locationId = websiteData.client_locations?.id;
   if (!locationId) return {};
 
-  const policy = await getPolicyBySlugForLocation(policySlug, locationId);
+  const supabaseClient = getSupabaseClientForBuildTime();
+  const policy = await getPolicyBySlugForLocation(policySlug, locationId, supabaseClient);
   if (!policy) {
     return {
       title: 'Policy Not Found',
@@ -179,8 +180,9 @@ export default async function LocationPolicyPage({ params }: PageProps) {
     notFound();
   }
 
+  const supabaseClient = await getSupabaseClient();
   const [policy, clientData] = await Promise.all([
-    getPolicyBySlugForLocation(policySlug, locationId),
+    getPolicyBySlugForLocation(policySlug, locationId, supabaseClient),
     getClientData(),
   ]);
 
@@ -355,4 +357,5 @@ export default async function LocationPolicyPage({ params }: PageProps) {
   );
 }
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
