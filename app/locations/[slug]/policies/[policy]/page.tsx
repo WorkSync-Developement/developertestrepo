@@ -2,12 +2,14 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import PolicyPageTemplate from '@/components/policies/PolicyPageTemplate';
+import ModernPolicyPageTemplate from '@/components/variants/modern/policies/PolicyPageTemplate';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getSchemaDefaults, buildPageUrl } from '@/lib/structured-data';
 import { getAllPolicies } from '@/lib/policy-categories';
 import { supabase } from '@/lib/supabase';
 import { validateRelatedPolicies } from '@/lib/policy-validation';
+import { getTemplateVariant } from '@/lib/variants';
 
 interface PageProps {
   params: Promise<{ slug: string; policy: string }>;
@@ -264,6 +266,9 @@ export default async function LocationPolicyPage({ params }: PageProps) {
     basePath: `/locations/${slug}/policies`,
   }));
 
+  const variant = await getTemplateVariant();
+  const PolicyTemplateComponent = variant === 'modern' ? ModernPolicyPageTemplate : PolicyPageTemplate;
+
   return (
     <>
       <script
@@ -274,7 +279,7 @@ export default async function LocationPolicyPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <PolicyPageTemplate
+      <PolicyTemplateComponent
         heroSection={{
           heading: policy.hero_section?.heading || policy.title || '',
           subheading: policy.hero_section?.subheading || '',
@@ -287,7 +292,7 @@ export default async function LocationPolicyPage({ params }: PageProps) {
         youtubeUrl={policy.youtube_url}
       >
         {null}
-      </PolicyPageTemplate>
+      </PolicyTemplateComponent>
     </>
   );
 }

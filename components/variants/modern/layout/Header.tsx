@@ -234,10 +234,8 @@ export default function Header({
               {normalizedPhone && (
                 <Link
                   href={`tel:${normalizedPhone}`}
-                  className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg bg-primary text-white"
                   style={{
-                    backgroundColor: ctaSettings?.bg_color || 'var(--cta-bg-color, var(--color-accent))',
-                    color: ctaSettings?.text_color || 'var(--cta-text-color, #ffffff)',
                     borderRadius: `${ctaSettings?.border_radius || 9999}px`,
                     border: ctaSettings?.border_width
                       ? `${ctaSettings.border_width}px solid ${ctaSettings.border_color || 'transparent'}`
@@ -359,11 +357,7 @@ export default function Header({
               {normalizedPhone && (
                 <Link
                   href={`tel:${normalizedPhone}`}
-                  className="flex items-center justify-center gap-2 mt-4 px-5 py-3 rounded-full font-semibold"
-                  style={{
-                    backgroundColor: ctaSettings?.bg_color || 'var(--cta-bg-color, var(--color-accent))',
-                    color: ctaSettings?.text_color || 'var(--cta-text-color, #ffffff)',
-                  }}
+                  className="flex items-center justify-center gap-2 mt-4 px-5 py-3 rounded-full font-semibold bg-primary text-white"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {navbarSettings?.show_icon !== false && <Phone size={18} />}

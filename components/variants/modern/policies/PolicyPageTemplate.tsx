@@ -1,8 +1,77 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 import Link from '@/components/location/Link';
-import Image from 'next/image';
-import YouTubeEmbed from '@/components/policies/YouTubeEmbed';
-import RelatedTermsSection from '@/components/policies/RelatedTermsSection';
+import Image from "next/image";
+import YouTubeEmbed from "@/components/policies/YouTubeEmbed";
+import RelatedTermsSection from "@/components/policies/RelatedTermsSection";
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
+
+interface FeaturesSectionProps {
+  title: string;
+  items: string[];
+}
+
+interface FaqSectionProps {
+  title: string;
+  faqs: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
+const ModernFeaturesSection = ({ title, items }: FeaturesSectionProps) => (
+  <section className="my-10">
+    <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100 relative overflow-hidden">
+      {/* Decorative corner accent */}
+      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
+      
+      <div className="relative z-10">
+        <h2 className="text-2xl md:text-3xl font-heading font-bold mb-6">
+          <span className="text-theme-text">{title}</span>
+        </h2>
+        <div className="h-1 w-16 rounded mb-6 bg-gradient-modern-primary-secondary"></div>
+        <ul className="space-y-4">
+          {items.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-gradient-modern-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                <CheckCircle2 size={16} className="text-white" />
+              </div>
+              <span className="text-theme-body text-lg leading-relaxed">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+);
+
+const ModernFaqSection = ({ title, faqs }: FaqSectionProps) => (
+  <section className="my-10">
+    <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100 relative overflow-hidden">
+      {/* Decorative corner accent */}
+      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
+      
+      <div className="relative z-10">
+        <h2 className="text-2xl md:text-3xl font-heading font-bold mb-6">
+          <span className="text-theme-text">{title}</span>
+        </h2>
+        <div className="h-1 w-16 rounded mb-6 bg-gradient-modern-primary-secondary"></div>
+        <div className="space-y-6">
+          {faqs.map((faq, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-modern-primary-5 to-modern-secondary-5 rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300"
+            >
+              <h3 className="text-lg font-semibold text-theme-text mb-3">
+                {faq.question}
+              </h3>
+              <p className="text-theme-body leading-relaxed">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 interface PolicyPageTemplateProps {
   children: ReactNode;
@@ -31,205 +100,229 @@ interface PolicyPageTemplateProps {
   youtubeUrl?: string;
 }
 
-const FeaturesSection = ({ title, items }: { title: string; items: string[] }) => (
-  <div className="bg-theme-bg-alt rounded-xl p-8 border mb-8" style={{ borderColor: 'var(--color-card-border)' }}>
-    <h2 className="text-2xl font-heading font-bold text-primary mb-4">
-      {title}
-    </h2>
-    <ul className="list-disc ml-6 text-theme-body space-y-2">
-      {items.map((item, idx) => (
-        <li key={idx} className="leading-relaxed">
-          {item}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
-
-const FaqSection = ({ title, faqs }: { title: string; faqs: Array<{ question: string; answer: string }> }) => (
-  <div className="bg-theme-bg-alt rounded-xl p-8 border mb-8" style={{ borderColor: 'var(--color-card-border)' }}>
-    <h2 className="text-2xl font-heading font-bold text-primary mb-6">
-      {title}
-    </h2>
-    <div className="space-y-4">
-      {faqs.map((faq, idx) => (
-        <div
-          key={idx}
-          className="border-b pb-4 last:border-0"
-          style={{ borderColor: 'var(--divider-color)' }}
-        >
-          <h3 className="text-base font-semibold text-primary mb-1">
-            {faq.question}
-          </h3>
-          <p className="text-sm text-theme-body leading-relaxed">{faq.answer}</p>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-export default function PolicyPageTemplate({
+export default function ModernPolicyPageTemplate({
   children,
   heroSection,
   relatedPolicies = [],
   relatedTerms = [],
-  canonicalUrl = '',
+  canonicalUrl = "",
   contentSections = [],
   faqs = [],
   youtubeUrl,
 }: PolicyPageTemplateProps) {
+
   return (
-    <main className="min-h-screen bg-theme-bg">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg, var(--color-background))' }}>
-        <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text, var(--color-text-primary))' }}>
-            {heroSection.heading}
-          </h1>
-
-          {heroSection.subheading && (
-            <p className="text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto" style={{ color: 'var(--hero-text-secondary, var(--color-text-body))' }}>
-              {heroSection.subheading}
-            </p>
-          )}
+      <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20 bg-gradient-modern-radial-primary"></div>
+        
+        <div className="container mx-auto px-4 py-4 max-w-screen-2xl relative z-10">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+              <span className="text-theme-text">{heroSection.heading}</span>
+            </h1>
+            {heroSection.subheading && (
+              <>
+                <div className="h-1 w-32 rounded mx-auto mb-6 bg-gradient-modern-primary-secondary"></div>
+                <p className="text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto text-theme-body leading-relaxed">
+                  {heroSection.subheading}
+                </p>
+              </>
+            )}
+          </div>
         </div>
-
       </section>
 
       {/* YouTube Video Section */}
       {youtubeUrl && (
-        <section className="container mx-auto px-4 py-8 max-w-4xl">
-          <div className="bg-white rounded-xl shadow-lg p-6 border" style={{ borderColor: 'var(--color-card-border)' }}>
-            <h2 className="text-2xl font-heading font-bold text-primary mb-4">
-              Video Overview
-            </h2>
-            <YouTubeEmbed url={youtubeUrl} />
+        <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+          
+          <div className="container mx-auto px-4 max-w-4xl relative z-10">
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100 relative overflow-hidden">
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
+              
+              <div className="relative z-10">
+                <h2 className="text-2xl md:text-3xl font-heading font-bold mb-6">
+                  <span className="text-theme-text">Video </span>
+                  <span className="text-primary">Overview</span>
+                </h2>
+                <div className="h-1 w-16 rounded mb-6 bg-gradient-modern-primary-secondary"></div>
+                <YouTubeEmbed url={youtubeUrl} />
+              </div>
+            </div>
           </div>
         </section>
       )}
 
       {/* Main Content Sections */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 mt-8 border" style={{ borderColor: 'var(--color-card-border)' }}>
-          {contentSections.map((item, idx) => {
-            switch (item.type) {
-              case 'heading':
-                return (
-                  <div key={idx} className="mb-4 mt-8 first:mt-0">
-                    {item.tag === 'h2' ? (
-                      <>
-                        <h2 className="text-2xl font-heading font-bold text-primary mb-2">
-                          {item.content}
-                        </h2>
-                        <div className="h-1 w-16 bg-accent/60 rounded mb-4" />
-                      </>
-                    ) : (
-                      <h3 className="text-xl font-heading font-bold text-primary mb-4">
-                        {item.content}
-                      </h3>
-                    )}
+      <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 mt-8 border border-gray-100 relative overflow-hidden">
+            {/* Decorative corner accent */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
+            
+            <div className="relative z-10">
+              {contentSections &&
+                contentSections.length > 0 &&
+                contentSections.map((item, idx) => {
+                  switch (item.type) {
+                    case "heading":
+                      return (
+                        <div key={idx} className="mb-6 mt-8 first:mt-0">
+                          {item.tag === "h2" ? (
+                            <>
+                              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">
+                                <span className="text-theme-text">{item.content}</span>
+                              </h2>
+                              <div className="h-1 w-16 rounded mb-6 bg-gradient-modern-primary-secondary" />
+                            </>
+                          ) : (
+                            <h3 className="text-xl md:text-2xl font-heading font-bold mb-4">
+                              <span className="text-theme-text">{item.content}</span>
+                            </h3>
+                          )}
+                        </div>
+                      );
+
+                    case "text":
+                      return (
+                        <div key={idx} className="mb-8">
+                          <p
+                            className="text-theme-body text-lg leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: item.content }}
+                          />
+                        </div>
+                      );
+
+                    case "features":
+                      return (
+                        <div key={idx} className="mb-8">
+                          <ModernFeaturesSection title={item.title} items={item.items} />
+                        </div>
+                      );
+
+                    case "cta":
+                      return (
+                        <div key={idx} className="text-center mt-10 mb-8 bg-gradient-to-br from-modern-primary-5 to-modern-secondary-5 rounded-2xl p-8 md:p-10 border border-gray-100 relative overflow-hidden">
+                          {/* Decorative corner accent */}
+                          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-modern-primary-10 to-transparent rounded-bl-full"></div>
+                          
+                          <div className="relative z-10">
+                            <h3 className="text-2xl md:text-3xl font-heading font-bold mb-4">
+                              <span className="text-theme-text">{item.title}</span>
+                            </h3>
+                            <div className="h-1 w-16 rounded mx-auto mb-6 bg-gradient-modern-primary-secondary"></div>
+                            <p className="text-theme-body mb-8 text-lg leading-relaxed">{item.text}</p>
+                            <Link
+                              href="/contact"
+                              className="text-center align-center items-center"
+                            >
+                              <button className="inline-flex items-center gap-2 font-bold py-4 px-8 rounded-full text-lg transition-all bg-gradient-modern-primary text-white hover:opacity-90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                {item.button_text}
+                                <ArrowRight size={18} />
+                              </button>
+                            </Link>
+                          </div>
+                        </div>
+                      );
+
+                    case "faqs":
+                      return (
+                        <div key={idx} className="mb-8">
+                          <ModernFaqSection title={item.title || "Frequently Asked Questions"} faqs={item.faqs || []} />
+                        </div>
+                      );
+                      
+                    default:
+                      return null;
+                  }
+                })}
+                
+                {/* Render page-level FAQs if provided */}
+                {faqs.length > 0 && (
+                  <div className="mb-8">
+                    <ModernFaqSection title="Frequently Asked Questions" faqs={faqs} />
                   </div>
-                );
-
-              case 'text':
-                return (
-                  <div key={idx} className="mb-8">
-                    <p
-                      className="text-theme-body leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: item.content || '' }}
-                    />
-                  </div>
-                );
-
-              case 'features':
-                return (
-                  <div key={idx} className="mb-8">
-                    <FeaturesSection title={item.title || ''} items={item.items || []} />
-                  </div>
-                );
-
-              case 'cta':
-                return (
-                  <div key={idx} className="text-center mt-10 mb-8 bg-secondary/10 rounded-xl p-8">
-                    <h3 className="text-xl font-heading font-bold text-primary mb-4">
-                      {item.title}
-                    </h3>
-                    <p className="text-theme-body mb-6">{item.text}</p>
-                    <Link href="/contact" className="text-center align-center items-center">
-                      <button className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex justify-center mx-auto">
-                        {item.button_text}
-                      </button>
-                    </Link>
-                  </div>
-                );
-
-              case 'faqs':
-                return (
-                  <div key={idx} className="mb-8">
-                    <FaqSection title={item.title || 'Frequently Asked Questions'} faqs={item.faqs || []} />
-                  </div>
-                );
-
-              default:
-                return null;
-            }
-          })}
-
-          {/* Render page-level FAQs if provided */}
-          {faqs.length > 0 && (
-            <div className="mb-8">
-              <FaqSection title="Frequently Asked Questions" faqs={faqs} />
+                )}
+              {children}
             </div>
-          )}
-          {children}
+          </div>
         </div>
       </section>
 
       {/* Related Terms */}
       {relatedTerms.length > 0 && (
-        <section className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <RelatedTermsSection terms={relatedTerms} />
+        <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+          
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto">
+              <RelatedTermsSection terms={relatedTerms} />
+            </div>
           </div>
         </section>
       )}
 
       {/* Related Policies */}
       {relatedPolicies.length > 0 && (
-        <section className="container mx-auto px-4 py-12 mb-12">
-          <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 border" style={{ borderColor: 'var(--color-card-border)' }}>
-            <div className="flex flex-col items-center mb-6">
-              <span className="text-2xl font-heading font-bold text-primary text-center">
-                Related Insurance Policies
-              </span>
-              <div className="h-1 w-24 bg-accent/60 rounded mt-3" />
-            </div>
+        <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-section">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
+          
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100 relative overflow-hidden">
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
+              
+              <div className="relative z-10">
+                <div className="flex flex-col items-center mb-8">
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold text-center mb-4">
+                    <span className="text-theme-text">Related Insurance </span>
+                    <span className="text-primary">Policies</span>
+                  </h2>
+                  <div className="h-1 w-24 rounded bg-gradient-modern-primary-secondary" />
+                </div>
 
-            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              {relatedPolicies.map((policy) => (
-                <li key={policy.slug}>
-                  <Link
-                    href={`${policy.basePath || '/policies'}/${policy.slug}`}
-                    className="bg-theme-bg-alt rounded-xl p-5 text-center shadow-md border hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center justify-center h-full"
-                    style={{ borderColor: 'var(--color-card-border)' }}
-                  >
-                    <span className="text-lg font-heading font-semibold text-primary mb-2">
-                      {policy.title}
-                    </span>
-                    <div className="mt-2 flex items-center text-accent/90 font-medium text-sm">
-                      <span>Learn More</span>
-                      <Image
-                        src="/Images/icons/arrow-right.svg"
-                        alt="Arrow Right"
-                        width={14}
-                        height={14}
-                        className="ml-1"
-                      />
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                <div className="flex flex-wrap justify-center gap-6 mt-8">
+                  {relatedPolicies.map((policy) => (
+                    <Link
+                      key={policy.slug}
+                      href={`${policy.basePath || '/policies'}/${policy.slug}`}
+                      className="block group w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] max-w-xs"
+                    >
+                      <div className="bg-white rounded-xl p-6 text-center shadow-lg border-2 border-gray-100 hover:border-primary hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col items-center justify-center h-full relative overflow-hidden">
+                        {/* Decorative corner accent */}
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
+                        
+                        <div className="relative z-10">
+                          <span className="text-lg font-heading font-semibold text-theme-text mb-2 group-hover:text-primary transition-colors block">
+                            {policy.title}
+                          </span>
+                          <div className="mt-4 flex items-center justify-center gap-2 text-primary font-semibold text-sm">
+                            <span>Learn More</span>
+                            <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       )}

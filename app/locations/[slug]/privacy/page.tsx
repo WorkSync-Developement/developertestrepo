@@ -4,6 +4,8 @@ import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getSchemaDefaults, buildPageUrl } from '@/lib/structured-data';
 import { Divider } from '@/components/ui/Divider';
+import ModernPrivacyPage from '@/components/variants/modern/privacy/PrivacyPage';
+import { getTemplateVariant } from '@/lib/variants';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -65,9 +67,10 @@ export default async function LocationPrivacyPage({ params }: PageProps) {
     notFound();
   }
 
-  const [websiteData, clientData] = await Promise.all([
+  const [websiteData, clientData, variant] = await Promise.all([
     getWebsiteBySlug(slug),
     getClientData(),
+    getTemplateVariant(),
   ]);
 
   if (!websiteData) {
@@ -98,6 +101,29 @@ export default async function LocationPrivacyPage({ params }: PageProps) {
     },
   };
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernPrivacyPage
+          locationName={locationName}
+          agencyName={agencyName}
+          email={email}
+          phone={phone}
+          address={address}
+          city={city}
+          state={state}
+          zip={zip}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonSchema) }}
+        />
+      </>
+    );
+  }
+
+  // Default variant
   return (
     <main className="flex-grow">
       {/* Hero Section */}

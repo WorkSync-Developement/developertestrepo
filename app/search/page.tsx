@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import SearchBar from 'components/search/SearchBar';
-import ModernSearchBar from '@/components/variants/modern/search/SearchBar';
 import SearchResults from 'components/search/SearchResults';
 import SearchHeader from 'components/search/SearchHeader';
+import ModernSearchPage from '@/components/variants/modern/search/SearchPage';
 import { Metadata } from 'next';
 import { getClientData } from '@/lib/client';
 import { getWebsiteData } from '@/lib/website';
@@ -82,15 +82,27 @@ export default async function SearchPage() {
     getTemplateVariant(),
   ]);
 
-  const SearchComponent = variant === 'modern' ? ModernSearchBar : SearchBar;
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernSearchPage />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildLdJsonSchema(clientData, websiteData)) }}
+        />
+      </>
+    );
+  }
 
+  // Default variant
   return (
     <main className="flex-grow">
       <section className="py-12 bg-theme-bg-alt relative w-full">
         <div className="container mx-auto px-4 py-4 max-w-screen-lg">
           <SearchHeader />
           <div className="max-w-2xl mx-auto">
-            <SearchComponent variant="fullwidth" placeholder="Search for insurance information, policies, etc..." />
+            <SearchBar variant="fullwidth" placeholder="Search for insurance information, policies, etc..." />
           </div>
         </div>
       </section>

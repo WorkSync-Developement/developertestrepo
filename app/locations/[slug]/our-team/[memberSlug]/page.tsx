@@ -1,5 +1,6 @@
 import React from 'react';
 import TeamMemberTemplate from 'components/our-team/TeamMemberTemplate';
+import ModernTeamMemberTemplate from '@/components/variants/modern/our-team/TeamMemberTemplate';
 import { getTeamMemberBySlug, getTeamMembers } from 'lib/team';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -7,6 +8,7 @@ import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getSchemaDefaults, buildPageUrl } from '@/lib/structured-data';
 import { getLocationIdBySlug } from '@/lib/utils';
+import { getTemplateVariant } from '@/lib/variants';
 
 interface PageProps {
   params: Promise<{ slug: string; memberSlug: string }>;
@@ -157,8 +159,11 @@ export default async function LocationTeamMemberPage({ params }: PageProps) {
         .filter((p): p is string => p !== undefined && p !== null && p !== '')
     : [];
 
+  const variant = await getTemplateVariant();
+  const TeamMemberTemplateComponent = variant === 'modern' ? ModernTeamMemberTemplate : TeamMemberTemplate;
+
   return (
-    <TeamMemberTemplate
+    <TeamMemberTemplateComponent
       teamMember={teamMember}
       basePath={`/locations/${slug}/our-team`}
     >
@@ -176,7 +181,7 @@ export default async function LocationTeamMemberPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonSchema) }}
       />
-    </TeamMemberTemplate>
+    </TeamMemberTemplateComponent>
   );
 }
 

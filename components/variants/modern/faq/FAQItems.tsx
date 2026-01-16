@@ -55,7 +55,7 @@ export default function FAQItems({ items }) {
               <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-modern-primary-5 to-transparent rounded-bl-full"></div>
               
               <div className="bg-gradient-to-br from-modern-primary-5 to-modern-secondary-5 p-6 flex items-center space-x-4 relative z-10">
-                <div className="w-12 h-12 rounded-full bg-gradient-modern-primary flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 rounded-full bg-gradient-modern-primary [&>svg]:text-white !important flex items-center justify-center shadow-lg">
                   {policy.icon}
                 </div>
                 <h2 className="text-2xl md:text-3xl font-heading font-bold text-theme-text">
