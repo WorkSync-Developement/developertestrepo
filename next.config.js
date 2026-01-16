@@ -26,6 +26,10 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048], // Responsive image sizes
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Image sizes for srcset
     formats: ['image/webp'], // Enable WebP format for better compression
+    qualities: [75, 90], // Allowed quality values (required for Next.js 16+)
+    dangerouslyAllowSVG: true, // Allow SVG images from placehold.co
+    contentDispositionType: 'attachment', // Security for SVG
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // CSP for SVG
   },
   
   // Add redirects for handling legacy routes

@@ -1,4 +1,4 @@
-import Footer from 'components/layout/Footer';
+import Footer from '@/components/variants/service-bold/layout/Footer';
 import { getClientData } from '@/lib/client';
 import { getWebsiteData, getWebsiteBySlug, getBadges, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
@@ -62,7 +62,6 @@ export default async function FooterShell({ locationPrefix, locationSlug }: Foot
 			isMultiLocation={isMultipleLocation}
 			footerLogoUrl={theme?.website_logo_url}
 			allLocations={allLocations || []}
-			socialLinksModalData={socialLinksModalData || { locations: [] }}
 		/>
 	);
 }

@@ -1,12 +1,16 @@
 import React from 'react';
 import { Metadata } from 'next';
-import HeroSection from '@/components/home-page/HeroSection';
-import IntroSection from '@/components/home-page/IntroSection';
-import LocationPoliciesSection from '@/components/home-page/LocationPoliciesSection';
-import Testimonials from '@/components/home-page/TestimonialsWrapper';
-import HomeCTA from '@/components/home-page/HomeCTA';
-import FAQPreview from '@/components/home-page/FAQPreviewWrapper';
-import InsuranceCareersSection from '@/components/home-page/InsuranceCareersSection';
+// Service Bold Variant - Lehmann Agency inspired design
+import HeroSectionWrapper from '@/components/variants/service-bold/home/HeroSectionWrapper';
+import ServicesSectionWrapper from '@/components/variants/service-bold/home/ServicesSectionWrapper';
+import WhyChooseUsSectionWrapper from '@/components/variants/service-bold/home/WhyChooseUsSectionWrapper';
+// GallerySection disconnected - component kept for future use
+// import GallerySection from '@/components/variants/service-bold/home/GallerySection';
+import TestimonialsSectionWrapper from '@/components/variants/service-bold/home/TestimonialsSectionWrapper';
+import ContactCTAWrapper from '@/components/variants/service-bold/home/ContactCTAWrapper';
+import FloatingCTAWrapper from '@/components/variants/service-bold/home/FloatingCTAWrapper';
+import BackToTop from '@/components/variants/service-bold/home/BackToTop';
+import StickyHeaderCTAWrapper from '@/components/variants/service-bold/home/StickyHeaderCTAWrapper';
 import { getClientData } from '@/lib/client';
 
 // Page-specific metadata overrides - inherits from layout.tsx
@@ -38,16 +42,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="home-content">
-      <HeroSection />
-      <IntroSection />
-      <LocationPoliciesSection />
-      <Testimonials />
-      <HomeCTA />
-      <FAQPreview />
-      <InsuranceCareersSection />
+      <StickyHeaderCTAWrapper />
+      <HeroSectionWrapper />
+      <ServicesSectionWrapper />
+      <WhyChooseUsSectionWrapper />
+      {/* GallerySection disconnected - component kept for future use */}
+      <TestimonialsSectionWrapper />
+      <ContactCTAWrapper />
+      <FloatingCTAWrapper />
+      <BackToTop />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import HeaderBar from 'components/layout/HeaderBar';
+import HeaderBar from '@/components/variants/service-bold/layout/Header';
 import { getClientData } from '@/lib/client';
 import { getFeatures, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
