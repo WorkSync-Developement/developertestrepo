@@ -50,6 +50,6 @@ v1.0.0 - Original coastal template design (default variant)
 ## Screenshots
 
 ### Coastal Variant Homepage
-![Coastal Variant Screenshot](./screenshots-variants/coastal_variant.png)
+![Coastal Variant Screenshot](./screenshots-variants/coastal-variant.png)
 
 The coastal variant features the original template design with card-based navigation, trust badge dividers, and ocean-inspired color palette.

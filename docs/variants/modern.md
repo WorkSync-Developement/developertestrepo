@@ -34,6 +34,6 @@ v1.0.0 - Contemporary design
 ## Screenshots
 
 ### Modern Variant Homepage
-![Modern Variant Screenshot](./screenshots-variants/modern:-variant.png)
+![Modern Variant Screenshot](./screenshots-variants/modern-variant.png)
 
 The modern variant showcases a contemporary design with sticky header, backdrop blur effects, rounded corners, and smooth animations.

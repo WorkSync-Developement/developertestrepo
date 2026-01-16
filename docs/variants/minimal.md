@@ -34,6 +34,6 @@ v1.0.0 - Minimalist aesthetic
 ## Screenshots
 
 ### Minimal Variant Homepage
-![Minimal Variant Screenshot](./screenshots-variants/minimal:-variant.png)
+![Minimal Variant Screenshot](./screenshots-variants/minimal-variant.png)
 
 The minimal variant demonstrates an ultra-clean design with light typography, maximum white space, minimal borders, and no decorative elements.

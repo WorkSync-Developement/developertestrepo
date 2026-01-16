@@ -4,9 +4,9 @@ Complete documentation for all 3 template variants.
 
 ## 📚 Variant Documentation
 
-- [Coastal Variant](./coastal.md) - Default/original template (⭐ default) - [Screenshot](./screenshots-variants/coastal_variant.png)
-- [Modern Variant](./modern.md) - Contemporary design - [Screenshot](./screenshots-variants/modern:-variant.png)
-- [Minimal Variant](./minimal.md) - Minimalist aesthetic - [Screenshot](./screenshots-variants/minimal:-variant.png)
+- [Coastal Variant](./coastal.md) - Default/original template (⭐ default) - [Screenshot](./screenshots-variants/coastal-variant.png)
+- [Modern Variant](./modern.md) - Contemporary design - [Screenshot](./screenshots-variants/modern-variant.png)
+- [Minimal Variant](./minimal.md) - Minimalist aesthetic - [Screenshot](./screenshots-variants/minimal-variant.png)
 
 ## 📊 Quick Comparison
 

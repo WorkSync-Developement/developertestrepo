@@ -33,7 +33,7 @@ export type VariantComponentName =
   | 'PolicyPageTemplate';
 
 // Default variant (current template style)
-export const DEFAULT_VARIANT: VariantName = 'modern';
+export const DEFAULT_VARIANT: VariantName = 'coastal';
 
 /**
  * Get the current client's template variant from database
