@@ -1,6 +1,6 @@
 import React from 'react';
 import { supabase } from '@/lib/supabase';
-import { FAQPreview } from './FAQPreview';
+import { getVariantComponent } from '@/lib/variants';
 
 interface QuestionItem {
   question: string;
@@ -36,6 +36,9 @@ async function getCommonQuestionsSection(): Promise<CommonQuestionsContent | nul
 }
 
 export default async function FAQPreviewWrapper() {
+  // Dynamically load FAQPreview component from active variant
+  const FAQPreview = await getVariantComponent('FAQPreview');
+  
   const content = await getCommonQuestionsSection();
 
   if (!content) {

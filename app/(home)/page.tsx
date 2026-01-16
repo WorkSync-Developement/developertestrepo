@@ -1,12 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import HeroSection from '@/components/home-page/HeroSection';
-import IntroSection from '@/components/home-page/IntroSection';
-import LocationPoliciesSection from '@/components/home-page/LocationPoliciesSection';
-import Testimonials from '@/components/home-page/TestimonialsWrapper';
-import HomeCTA from '@/components/home-page/HomeCTA';
-import FAQPreview from '@/components/home-page/FAQPreviewWrapper';
-import InsuranceCareersSection from '@/components/home-page/InsuranceCareersSection';
+import { getVariantComponent } from '@/lib/variants';
 import { getClientData } from '@/lib/client';
 
 // Page-specific metadata overrides - inherits from layout.tsx
@@ -38,7 +32,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-export default function Home() {
+export default async function Home() {
+  // Dynamically load all variant components
+  const HeroSection = await getVariantComponent('HeroSection');
+  const IntroSection = await getVariantComponent('IntroSection');
+  const LocationPoliciesSection = await getVariantComponent('LocationPoliciesSection');
+  const Testimonials = await getVariantComponent('Testimonials');
+  const HomeCTA = await getVariantComponent('HomeCTA');
+  const FAQPreview = await getVariantComponent('FAQPreview');
+  const CareersSection = await getVariantComponent('CareersSection');
+
   return (
     <div className="home-content">
       <HeroSection />
@@ -47,7 +50,7 @@ export default function Home() {
       <Testimonials />
       <HomeCTA />
       <FAQPreview />
-      <InsuranceCareersSection />
+      <CareersSection />
     </div>
   );
 }
