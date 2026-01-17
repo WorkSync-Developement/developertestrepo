@@ -99,6 +99,19 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
     }
   }, []);
 
+  useEffect(() => {
+    if (!isSearchVisible) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSearchVisible(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchVisible]);
+
   // Toggle menu expansion
   const toggleMenu = useCallback(() => {
     if (!isExpanded) {
@@ -205,17 +218,17 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
             {/* Logo - Enhanced with Animation */}
             <div className="flex items-center">
               <Link href={locationPrefix || '/'} className="flex items-center gap-3 group transition-all duration-300">
-                  <div className="relative">
-                    <Image
+                <div className="relative">
+                  <Image
                     src={'/logo-removebg-preview.png'}
                     // src={logoUrl || '/logo.png'}
-                      alt={websiteName || "Logo"}
-                      width={140}
-                      height={50}
-                      className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                      priority
-                    />
-                  </div>
+                    alt={websiteName || "Logo"}
+                    width={140}
+                    height={50}
+                    className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    priority
+                  />
+                </div>
                 {showSiteName && websiteName && (
                   <span className="hidden md:inline font-bold font-heading text-xl transition-all duration-300 group-hover:text-opacity-80 text-white"
                     style={{
@@ -379,24 +392,25 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
         </nav>
       </div>
 
-      {/* Search Overlay */}
       {isSearchVisible && (
-        <div className="fixed inset-0 bg-white z-50 p-4 animate-fade-in" role="dialog" aria-label="Search">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-primary">Search</h3>
-            <button
-              onClick={toggleSearch}
-              className="text-primary"
-              aria-label="Close search"
-            >
-              <X size={24} />
-            </button>
+        <div className="w-full border-t border-slate-200 bg-white/95">
+          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-4">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="text-sm font-semibold text-primary">Search the site</h3>
+              <button
+                onClick={toggleSearch}
+                className="ml-4 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border/70 text-muted-foreground hover:text-primary hover:border-primary/60 hover:bg-primary/5 transition-colors"
+                aria-label="Close search"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <SearchBar
+              variant="fullwidth"
+              placeholder="Search for insurance, policies, FAQs, or topics..."
+              onClose={toggleSearch}
+            />
           </div>
-          <SearchBar
-            variant="fullwidth"
-            placeholder="Search for insurance, policies, etc..."
-            onClose={toggleSearch}
-          />
         </div>
       )}
     </header>

@@ -9,21 +9,22 @@ export default function BlogTopics({ topics, basePath = '/blog' }: { topics: any
   const [currentPage, setCurrentPage] = useState(1);
   const topicsPerPage = 10;
 
-  // Calculate pagination
   const indexOfLastTopic = currentPage * topicsPerPage;
   const indexOfFirstTopic = indexOfLastTopic - topicsPerPage;
   const currentTopics = topics.slice(indexOfFirstTopic, indexOfLastTopic);
   const totalPages = Math.ceil(topics.length / topicsPerPage);
 
-  // Change page handler
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="">
       <div className="container mx-auto px-4 max-w-screen-xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10">
           {currentTopics.map((topic: any) => (
-            <div key={topic.id} className="bg-card-bg rounded-xl shadow-lg border border-card-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-full">
+            <div
+              key={topic.id}
+              className="bg-card-bg rounded-2xl shadow-md border border-card-border hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-full"
+            >
               <div className="w-full aspect-square bg-gray-200 relative" style={{ maxWidth: 1024, maxHeight: 1024 }}>
                 {/* Use Next.js Image component for optimized loading if topic.image_url exists */}
                 {topic.image_url ? (
