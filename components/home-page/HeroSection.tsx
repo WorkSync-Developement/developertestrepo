@@ -86,13 +86,17 @@ const HeroSection = async ({ locationId }: { locationId?: string | null }) => {
     ));
   };
 
+  // Use title from heroContent or fallback
+  const title = heroContent?.title?.content || 'Your Trusted Local Insurance Partner';
+  const description = heroContent?.description?.content || heroContent?.subtitle?.content || 'Expert guidance and dependable coverage tailored to your needs. Protecting what matters most.';
+
+  // Check if we have background media
+  const hasBackgroundMedia = (heroContent?.background_media_type === 'video' && heroContent?.background_video?.url) || 
+                             (heroContent?.background_image?.url);
+
   return (
     <section 
-      className="relative overflow-hidden w-full"
-      style={{
-        height: "50vh",
-        minHeight: "600px"
-      }}
+      className={`relative w-full min-h-screen flex items-center ${!hasBackgroundMedia ? 'bg-gradient-to-b from-primary/10 to-background' : ''}`}
       aria-label="Agency introduction and welcome"
       role="banner"
     >
@@ -105,6 +109,9 @@ const HeroSection = async ({ locationId }: { locationId?: string | null }) => {
             muted
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              filter: 'brightness(0.7)',
+            }}
           >
             <source src={heroContent.background_video.url} type="video/mp4" />
           </video>
@@ -115,61 +122,67 @@ const HeroSection = async ({ locationId }: { locationId?: string | null }) => {
             src={heroContent.background_image.url}
             fill
             priority
-            quality={90}
+            quality={95}
             sizes="100vw"
             style={{
               objectFit: 'cover',
               objectPosition: 'center',
+              filter: 'brightness(0.7)',
             }}
             alt={heroContent?.background_image?.alt || "Hero background image"}
           />
         </div>
       ) : null}
       
+      {/* Overlay for better text readability when background image/video is present */}
+      {hasBackgroundMedia && (
+        <div 
+          className="absolute inset-0 z-[1] bg-gradient-to-b from-black/40 via-black/20 to-black/40"
+        />
+      )}
+      
       {/* Configurable overlay filter */}
       {(heroContent?.overlay?.opacity ?? 0) > 0 && (
         <div 
-          className="absolute inset-0 z-[1]"
+          className="absolute inset-0 z-[2]"
           style={{
             backgroundColor: heroContent?.overlay?.color || '#000000',
             opacity: (heroContent?.overlay?.opacity ?? 0) / 100
           }}
         />
       )}
-      
-      {/* Fallback overlay when no custom overlay is set */}
-      {(heroContent?.overlay?.opacity ?? 0) === 0 && (
-        <div className="absolute inset-0 bg-theme-bg/20 z-[1]"></div>
-      )}
-      
-      {/* Hero text container with improved responsive positioning */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-10 px-4">
-        <div className="w-full max-w-5xl mx-auto text-center animate-fade-in">
-          <h1 className="mb-4 sm:mb-6">
-            <span 
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight drop-shadow-xl"
-              style={{ color: heroContent?.title?.color || 'var(--color-primary)' }}
-            >
-              {renderWithLineBreaks(heroContent?.title?.content || '')}
-            </span>
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center max-w-3xl mx-auto">
+          <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight ${hasBackgroundMedia ? 'text-white' : 'text-foreground'}`}>
+            {renderWithLineBreaks(title)}
           </h1>
 
-          <h2 
-            className="inline-block text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium px-4 py-2 sm:px-6 sm:py-3 bg-white/40 backdrop-blur-sm rounded-xl shadow-md tracking-wide"
-            style={{ color: heroContent?.subtitle?.color || 'var(--color-text-muted)' }}
-          >
-            {renderWithLineBreaks(heroContent?.subtitle?.content || '')}
-          </h2>
-          
-          <p className="mt-6 text-base sm:text-lg md:text-xl px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-sm max-w-xl mx-auto text-theme-body">
-            {renderWithLineBreaks(heroContent?.description?.content || '')}
+          <p className={`text-lg sm:text-xl mb-8 leading-relaxed ${hasBackgroundMedia ? 'text-white/90' : 'text-muted-foreground'}`}>
+            {renderWithLineBreaks(description)}
           </p>
-          
-          <div className="mt-8">
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <HeroCTAButton 
               isMultiLocation={multiLocation} 
               locations={locations || []} 
             />
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center text-sm">
+            <div className="flex items-center gap-2">
+              <div className={`w-1.5 h-1.5 rounded-full ${hasBackgroundMedia ? 'bg-white' : 'bg-primary'}`}></div>
+              <span className={hasBackgroundMedia ? 'text-white/80' : 'text-muted-foreground'}>Licensed & Insured</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-1.5 h-1.5 rounded-full ${hasBackgroundMedia ? 'bg-white' : 'bg-primary'}`}></div>
+              <span className={hasBackgroundMedia ? 'text-white/80' : 'text-muted-foreground'}>25+ Years Serving Our Community</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-1.5 h-1.5 rounded-full ${hasBackgroundMedia ? 'bg-white' : 'bg-primary'}`}></div>
+              <span className={hasBackgroundMedia ? 'text-white/80' : 'text-muted-foreground'}>Local Expertise</span>
+            </div>
           </div>
         </div>
       </div>

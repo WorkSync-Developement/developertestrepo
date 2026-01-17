@@ -92,7 +92,7 @@ function BadgeItem({
         style={{
           color: settings.badge_icon_color 
             ? settings.badge_icon_color 
-            : 'var(--trust-badge-icon, var(--color-accent, #2563eb))',
+            : 'var(--trust-badge-icon, var(--color-accent, #364f6b))',
         }}
       />
       <span

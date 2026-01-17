@@ -17,8 +17,8 @@ function SearchHeaderContent () {
 
   return (
     <header>
-      <h1 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-6 text-center">
-        {searchQuery ? `Search Results for "${searchQuery}"` : 'Search Our Site'}
+      <h1 className="text-4xl sm:text-5xl font-heading font-bold text-foreground mb-4 tracking-tight">
+        {searchQuery ? `Search results for "${searchQuery}"` : 'Search our site'}
       </h1>
     </header>
   );

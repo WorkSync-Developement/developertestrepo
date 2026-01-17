@@ -23,31 +23,38 @@ const HeroCTAButton: React.FC<HeroCTAButtonProps> = ({
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  if (!isMultiLocation) {
-    return (
-      <Link
-        href="/contact"
-        className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-      >
-        Contact Us
-      </Link>
-    );
-  }
-
   return (
     <>
-      <button
-        onClick={() => setIsPopupOpen(true)}
-        className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+      {isMultiLocation ? (
+        <button
+          onClick={() => setIsPopupOpen(true)}
+          className="px-8 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition"
+        >
+          Find a Location
+        </button>
+      ) : (
+        <Link
+          href="/contact"
+          className="px-8 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition"
+        >
+          Find a Location
+        </Link>
+      )}
+      
+      <Link
+        href="/contact"
+        className="px-8 py-3 rounded-lg border-2 border-white text-white font-semibold hover:bg-white/10 transition"
       >
-        Find a Location
-      </button>
+        Get a Quote
+      </Link>
 
-      <LocationPickerPopup
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-        locations={locations}
-      />
+      {isMultiLocation && (
+        <LocationPickerPopup
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          locations={locations}
+        />
+      )}
     </>
   );
 };

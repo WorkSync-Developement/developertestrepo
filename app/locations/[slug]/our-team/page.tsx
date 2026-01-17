@@ -85,12 +85,16 @@ export default async function LocationTeamPage({ params }: PageProps) {
   const locationId = websiteData.client_locations?.location_id || await getLocationIdBySlug(slug);
   const pageMetadata = await getPageMetadata('our-team', locationId);
   const locationName = websiteData.client_locations?.location_name || '';
+  const heroHeading = pageMetadata.hero_heading || 'Meet Our Team';
+  const heroSubheading =
+    pageMetadata.hero_subheading ||
+    `Dedicated insurance professionals serving ${locationName} and the surrounding area.`;
 
   return (
     <TeamPageTemplate
       heroSection={{
-        heading: pageMetadata.hero_heading || "Meet Our Team",
-        subheading: pageMetadata.hero_subheading || `Dedicated insurance professionals serving ${locationName} and the surrounding area.`,
+        heading: heroHeading,
+        subheading: heroSubheading,
       }}
     >
       <TeamMembers locationId={locationId} basePath={`/locations/${slug}/our-team`} />

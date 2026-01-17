@@ -129,31 +129,29 @@ const InsuranceCareersSection = async () => {
             </p>
           </div>
           
-          <div className={`grid grid-cols-1 md:grid-cols-2 ${lgGridCols} gap-6 justify-items-center ${gridContainerWidth}`}>
+          <div className={`grid grid-cols-1 md:grid-cols-2 ${lgGridCols} gap-8 justify-items-center ${gridContainerWidth}`}>
             {locations.map((location) => (
               <Link 
                 href={`/locations/${location.location_slug}/apply`} 
                 key={location.id}
-                className="block w-full max-w-md transform hover:-translate-y-1 transition-all duration-300"
+                className="block w-full max-w-md group"
               >
                 <div 
-                  className="rounded-xl shadow-lg border p-8 hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer"
+                  className="bg-white rounded-xl p-8 border border-border shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full"
                   style={cardStyle}
                 >
-                  <h3 className="text-2xl font-heading font-bold mb-3 text-center" style={cardHeadingStyle}>
-                    {location.location_name}
-                  </h3>
-                  <div className="h-1 w-16 rounded mx-auto mb-4 opacity-60" style={accentLineStyle}></div>
-                  <p className="mb-6 text-center flex-grow" style={cardBodyStyle}>
-                    {location.city}, {location.state}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">{location.location_name}</h3>
+                      <p className="text-sm text-muted-foreground">{location.city}, {location.state}</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-6 flex-grow">
+                    We're looking for passionate professionals to join our growing team.
                   </p>
-                  <div className="text-center mt-auto">
-                    <span 
-                      className="inline-flex items-center gap-2 font-bold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:opacity-80"
-                      style={buttonStyle}
-                    >
-                      Apply Now
-                      <img src="/Images/icons/arrow-right.svg" alt="Arrow Right" className="h-[18px] w-[18px]" />
+                  <div className="mt-auto">
+                    <span className="inline-flex items-center justify-center w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition">
+                      Apply Now →
                     </span>
                   </div>
                 </div>

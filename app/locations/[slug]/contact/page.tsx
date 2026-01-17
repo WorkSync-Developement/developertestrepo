@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, MapPin, Clock, MessageSquare } from 'lucide-react';
+import { Phone, MapPin, Clock, MessageSquare, Send, Mail } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -8,7 +8,6 @@ import { getWebsiteBySlug, isMultiLocation, getAllWebsites, getFeatures } from '
 import { getPageMetadata } from '@/lib/page-metadata';
 import { formatPhoneNumber } from '@/lib/utils';
 import { getSchemaDefaults } from '@/lib/structured-data';
-import { Divider } from '@/components/ui/Divider';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -120,8 +119,6 @@ export default async function LocationContactPage({ params }: PageProps) {
     notFound();
   }
 
-  // Note: pageMetadata available via getPageMetadata if needed for title/description
-
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
   const location = websiteData.client_locations;
   const phone = location?.phone || websiteData?.phone || clientData?.phone;
@@ -153,133 +150,185 @@ export default async function LocationContactPage({ params }: PageProps) {
     : 'Map location';
 
   return (
-    <main className="flex-grow">
-      {/* Contact Page Hero */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
-        <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
-            Contact Us
+    <main className="flex-grow bg-background">
+      {/* Hero Section */}
+      <section className="w-full py-20 sm:py-24 relative overflow-hidden bg-background">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-y-1/2"></div>
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium bg-secondary/10 text-secondary mb-6">
+             <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+              </span>
+            <span>Contact Us</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-foreground mb-6 tracking-tight">
+            Get in Touch
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto" style={{ color: 'var(--hero-text-secondary)' }}>
-            We&apos;re here to answer your questions and provide the support you need
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            We&apos;re here to answer your questions and provide the support you need. Reach out to us today.
           </p>
         </div>
-        <Divider position="bottom" />
       </section>
 
-      {/* Quick Text for Quote CTA */}
+      {/* Quick Text Banner - Floating Card */}
       {formattedPhone && (
-        <section className="py-12 bg-theme-bg-alt relative">
-          <div className="container mx-auto px-4 max-w-screen-xl text-center">
-            <div className="bg-card-bg rounded-xl p-8 max-w-2xl mx-auto shadow-md border border-card-border">
-              <MessageSquare className="text-primary h-12 w-12 mx-auto mb-4" />
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-4">
-                Get a Quick Quote via Text!
-              </h2>
-              <p className="text-theme-body text-lg mb-6">
-                For the fastest service, text us your insurance questions. We&apos;ll respond quickly with personalized quotes and answers.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-                <a
-                  href={`sms:${smsPhone || phone}?body=${encodeURIComponent(smsMessage)}`}
-                  className="bg-accent hover:bg-accent/80 text-accent-foreground font-bold py-4 px-8 rounded-full transition duration-300 flex items-center gap-3 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  <MessageSquare className="h-6 w-6" />
-                  Text Us: {formattedPhone}
-                </a>
-                <span className="text-theme-body font-medium">Most convenient option!</span>
+        <section className="relative -mt-12 z-20 px-4 mb-16">
+          <div className="max-w-4xl mx-auto bg-card rounded-2xl shadow-xl border border-border/50 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-card to-background">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <MessageSquare className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-foreground mb-2">
+                  Get a Quick Quote via Text
+                </h2>
+                <p className="text-muted-foreground text-sm max-w-md">
+                  For the fastest service, text us your questions. We&apos;ll respond quickly with personalized quotes.
+                </p>
               </div>
             </div>
+            <a
+              href={`sms:${smsPhone || phone}?body=${encodeURIComponent(smsMessage)}`}
+              className="whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              Text Us: {formattedPhone}
+            </a>
           </div>
         </section>
       )}
 
-      {/* Contact Form and Information */}
-      <section className="py-16 bg-white relative">
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <ContactForm clientId={clientId} locationId={location?.id} />
-
-            {/* Contact Information */}
-            <div className="bg-card-bg p-8 rounded-lg shadow-md border border-card-border">
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-8">Our Contact Information</h2>
-              <div className="space-y-10">
-                <div className="flex items-start">
-                  <div className="mt-1 mr-6">
-                    <MapPin className="text-primary h-8 w-8" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-heading font-bold text-primary mb-3">Office Location</h3>
-                    <p className="text-theme-body text-lg">{location?.address_line_1 || ''}</p>
-                    {location?.address_line_2 && (
-                      <p className="text-theme-body text-lg">{location.address_line_2}</p>
-                    )}
-                    <p className="text-theme-body text-lg">
-                      {location?.city || ''}, {location?.state || ''} {location?.zip || ''}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="mt-1 mr-6">
-                    <Phone className="text-primary h-8 w-8" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-heading font-bold text-primary mb-3">Phone Number</h3>
-                    <p className="text-theme-body text-xl font-medium">{formattedPhone || ''}</p>
-                  </div>
-                </div>
-                {showBusinessHours && businessHours && (
-                  <div className="flex items-start">
-                    <div className="mt-1 mr-6">
-                      <Clock className="text-primary h-8 w-8" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-heading font-bold text-primary mb-3">Business Hours</h3>
-                      <div className="grid grid-cols-2 gap-x-2 text-lg">
-                        {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => {
-                          const hours = (businessHours as any)[day];
-                          if (!hours) return null;
-                          return (
-                            <React.Fragment key={day}>
-                              <p className="text-theme-body font-medium capitalize">{day}:</p>
-                              <p className="text-theme-body">
-                                {hours.closed ? 'Closed' : `${hours.open}-${hours.close}`}
-                              </p>
-                            </React.Fragment>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                )}
+      {/* Main Content Area */}
+      <section className="pb-24 px-4">
+        <div className="container mx-auto max-w-screen-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            
+            {/* Contact Form Section */}
+            <div className="lg:col-span-7">
+              <div className="bg-card rounded-2xl shadow-sm border border-border p-1">
+                 <ContactForm clientId={clientId} locationId={location?.id} />
               </div>
             </div>
+
+            {/* Contact Info Sidebar */}
+            <div className="lg:col-span-5 space-y-8">
+              {/* Contact Details Card */}
+              <div className="bg-card rounded-2xl shadow-sm border border-border p-8">
+                <h3 className="text-xl font-heading font-bold text-foreground mb-6 flex items-center gap-2">
+                  <span className="w-1 h-6 bg-primary rounded-full"></span>
+                  Contact Information
+                </h3>
+                
+                <div className="space-y-6">
+                  {/* Address */}
+                  <div className="flex items-start gap-4 group">
+                    <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors shrink-0">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">Office Location</p>
+                      <p className="text-foreground font-medium">{location?.address_line_1 || ''}</p>
+                      {location?.address_line_2 && (
+                        <p className="text-foreground font-medium">{location.address_line_2}</p>
+                      )}
+                      <p className="text-foreground font-medium">
+                        {location?.city || ''}, {location?.state || ''} {location?.zip || ''}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="flex items-start gap-4 group">
+                    <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors shrink-0">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">Phone Number</p>
+                      <a href={`tel:${phone}`} className="text-foreground font-medium hover:text-primary transition-colors text-lg block">
+                        {formattedPhone || ''}
+                      </a>
+                    </div>
+                  </div>
+                  
+                  {/* Email (if available in websiteData/clientData - inferred) */}
+                  {(websiteData?.email || clientData?.contact_email) && (
+                     <div className="flex items-start gap-4 group">
+                       <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors shrink-0">
+                         <Mail className="w-5 h-5" />
+                       </div>
+                       <div>
+                         <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">Email Address</p>
+                         <a href={`mailto:${websiteData?.email || clientData?.contact_email}`} className="text-foreground font-medium hover:text-primary transition-colors block break-all">
+                           {websiteData?.email || clientData?.contact_email}
+                         </a>
+                       </div>
+                     </div>
+                  )}
+
+                </div>
+              </div>
+
+              {/* Business Hours Card */}
+              {showBusinessHours && businessHours && (
+                <div className="bg-card rounded-2xl shadow-sm border border-border p-8">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-6 flex items-center gap-2">
+                    <span className="w-1 h-6 bg-primary rounded-full"></span>
+                    Business Hours
+                  </h3>
+                  <div className="space-y-3">
+                    {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => {
+                      const hours = (businessHours as any)[day];
+                      if (!hours) return null;
+                      const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() === day;
+                      
+                      return (
+                        <div key={day} className={`flex justify-between items-center text-sm py-2 border-b border-border/40 last:border-0 ${isToday ? 'bg-primary/5 -mx-4 px-4 rounded-lg font-medium' : ''}`}>
+                          <span className={`capitalize ${isToday ? 'text-primary' : 'text-muted-foreground'}`}>{day}</span>
+                          <span className={isToday ? 'text-foreground' : 'text-foreground/80'}>
+                            {hours.closed ? 'Closed' : `${hours.open} - ${hours.close}`}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-16 bg-secondary/40 relative">
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-8 text-center">Find Us on the Map</h2>
-          <div className="h-[400px] bg-card-bg rounded-lg shadow-md border border-card-border relative overflow-hidden">
-            {/* Updated Google Maps embed with location-specific address */}
-            <div className="w-full h-full flex items-center justify-center text-gray-500">
-              <iframe
-                src={mapSrc}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={false}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title={mapTitle}
-              ></iframe>
+      {/* Map Section - Full Width Container with Border Radius */}
+      <section className="pb-24 px-4">
+        <div className="container mx-auto max-w-screen-xl">
+          <div className="bg-card rounded-3xl overflow-hidden shadow-lg border border-border h-[450px] relative group">
+            <iframe
+              src={mapSrc}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={false}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title={mapTitle}
+              className="grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
+            ></iframe>
+            {/* Overlay hint */}
+            <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm text-xs font-medium border border-border pointer-events-none">
+              <span className="flex items-center gap-1.5">
+                 <MapPin className="w-3 h-3 text-primary" />
+                 {location?.address_line_1 || clientData?.agency_name}
+              </span>
             </div>
           </div>
         </div>
-        <Divider position="bottom" />
       </section>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(generateLdJsonSchema(clientData, websiteData, websiteData)) }}

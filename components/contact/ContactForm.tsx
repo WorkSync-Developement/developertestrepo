@@ -33,6 +33,16 @@ export default function ContactForm({ clientId, locationId }: { clientId: string
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.subject) {
+      toast({
+        title: "Please select a subject",
+        description: "Choose what you'd like to talk with us about.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     const client_id = clientId;
     try {
@@ -82,7 +92,7 @@ export default function ContactForm({ clientId, locationId }: { clientId: string
   };
 
   return (
-    <div className="bg-card-bg p-8 rounded-lg shadow-md border border-card-border">
+    <div className="bg-card-bg p-8 rounded-lg ">
       <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-6">Send Us a Message</h2>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -153,20 +163,38 @@ export default function ContactForm({ clientId, locationId }: { clientId: string
         </div>
         <div>
           <label htmlFor="subject" className="block text-theme-body font-medium mb-2">Subject</label>
-          <select
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
-            required
-          >
-            <option value="">Select a subject</option>
-            <option value="quote">Insurance Quote</option>
-            <option value="claim">File a Claim</option>
-            <option value="policy">Policy Question</option>
-            <option value="other">Other</option>
-          </select>
+          <div className="relative">
+            <select
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              className="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-3 pr-10 text-sm text-theme-body shadow-sm focus:border-secondary focus:ring-2 focus:ring-secondary focus:outline-none"
+              required
+            >
+              <option value="">Select a subject</option>
+              <option value="quote">Insurance Quote</option>
+              <option value="claim">File a Claim</option>
+              <option value="policy">Policy Question</option>
+              <option value="other">Other</option>
+            </select>
+            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+              <svg
+                className="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.5 7.5L10 12L14.5 7.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
         <div>
           <label htmlFor="message" className="block text-theme-body font-medium mb-2">Your Message</label>
@@ -184,7 +212,7 @@ export default function ContactForm({ clientId, locationId }: { clientId: string
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`bg-accent hover:bg-accent/80 text-accent-foreground font-bold py-3 px-8 rounded-full transition duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+          className={`bg-primary hover:bg-accent/80 text-accent-foreground font-bold py-3 px-8 rounded-full transition duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
           {isSubmitting ? 'Sending...' : 'Send Message'}
         </button>

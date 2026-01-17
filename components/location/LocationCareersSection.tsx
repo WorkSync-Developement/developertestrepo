@@ -88,51 +88,53 @@ const LocationCareersSection = async ({
   const description = careersSection.description || 'Start your career in insurance with us.';
   const buttonText = careersSection.button_text || 'Apply Now';
 
+  // Create positions array for the grid layout
+  const positions = [
+    {
+      location: locationName,
+      city: city,
+      icon: "👔",
+    }
+  ];
+
   return (
-    <section className="py-16 relative" style={sectionStyle}>
+    <section id="careers" className="w-full py-16 sm:py-24 bg-background">
       <Divider position="top" />
       
-      <div className="container mx-auto px-4 max-w-screen-xl">
-        <div className="text-center mb-12 animation-fade-up">
-          <Badge className="mb-4" style={badgeStyle}>
-            <span>Join Our Team</span>
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6 relative" style={headingStyle}>
-            {heading}
-            <div className="h-1 w-24 rounded mx-auto mt-3 opacity-60" style={accentLineStyle}></div>
-          </h2>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12" style={subheadingStyle}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">{heading}</h2>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             {description}
           </p>
         </div>
         
-        <div className="flex justify-center">
-          <Link 
-            href={`/locations/${locationSlug}/apply`}
-            className="block w-full max-w-md transform hover:-translate-y-1 transition-all duration-300"
-          >
-            <div 
-              className="rounded-xl shadow-lg border p-8 hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer"
-              style={cardStyle}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {positions.map((pos, index) => (
+            <Link 
+              key={index} 
+              href={`/locations/${locationSlug}/apply`}
+              className="block group"
             >
-              <h3 className="text-2xl font-heading font-bold mb-3 text-center" style={cardHeadingStyle}>
-                {locationName}
-              </h3>
-              <div className="h-1 w-16 rounded mx-auto mb-4 opacity-60" style={accentLineStyle}></div>
-              <p className="mb-6 text-center flex-grow" style={cardBodyStyle}>
-                {city}, {state}
-              </p>
-              <div className="text-center mt-auto">
-                <span 
-                  className="inline-flex items-center gap-2 font-bold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:opacity-80"
-                  style={buttonStyle}
-                >
-                  {buttonText}
-                  <img src="/Images/icons/arrow-right.svg" alt="Arrow Right" className="h-[18px] w-[18px]" />
-                </span>
+              <div className="bg-white rounded-xl p-8 border border-border shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">{pos.icon}</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">{pos.location}</h3>
+                    <p className="text-sm text-muted-foreground">{pos.city}, {state}</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground mb-6 flex-grow">
+                  We're looking for passionate professionals to join our growing team.
+                </p>
+                <div className="mt-auto">
+                  <span className="inline-flex items-center justify-center w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition">
+                    {buttonText} →
+                  </span>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

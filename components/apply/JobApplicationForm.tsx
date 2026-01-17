@@ -45,12 +45,12 @@ export default function JobApplicationForm({
     if (file) {
       // Find the file field configuration
       const fileField = formFields.find(f => f.type === 'file');
-      
+
       // Validate file type
       if (fileField?.accept) {
         const acceptedTypes = fileField.accept.split(',').map(t => t.trim());
         const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-        
+
         if (!acceptedTypes.includes(fileExtension)) {
           toast.error("Invalid File Type", {
             description: `Please upload a file with one of these extensions: ${fileField.accept}`,
@@ -58,7 +58,7 @@ export default function JobApplicationForm({
           return;
         }
       }
-      
+
       // Validate file size
       const maxSize = fileField?.maxSize || 5242880; // Default 5MB
       if (file.size > maxSize) {
@@ -68,7 +68,7 @@ export default function JobApplicationForm({
         });
         return;
       }
-      
+
       setResumeFile(file);
     }
   };
@@ -79,7 +79,7 @@ export default function JobApplicationForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Check if resume field exists and is required
     const resumeField = formFields.find(f => f.type === 'file');
     if (resumeField?.required && !resumeFile) {
@@ -90,17 +90,17 @@ export default function JobApplicationForm({
     }
 
     setIsSubmitting(true);
-    
+
     try {
       let filePath = null;
-      
+
       // Upload resume if provided
       if (resumeFile) {
         const fileExt = resumeFile.name.split('.').pop();
-        
+
         // Try to construct a name from any field containing "name"
         let userName = '';
-        
+
         // Look for common name field patterns
         if (formData.name) {
           userName = formData.name;
@@ -108,18 +108,18 @@ export default function JobApplicationForm({
           userName = `${formData.firstName || ''}${formData.lastName || ''}`.trim();
         } else {
           // Search for any field with "name" in the key (case-insensitive)
-          const nameFields = Object.keys(formData).filter(key => 
+          const nameFields = Object.keys(formData).filter(key =>
             key.toLowerCase().includes('name')
           );
-          
+
           if (nameFields.length > 0) {
             // Combine all name fields
             userName = nameFields.map(key => formData[key]).filter(Boolean).join('');
           }
         }
-        
+
         // Create filename: UserName_timestamp.ext (remove spaces and special chars from name)
-        const sanitizedName = userName 
+        const sanitizedName = userName
           ? userName.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '')
           : 'Application';
         const fileName = `${sanitizedName}_${Date.now()}.${fileExt}`;
@@ -180,8 +180,8 @@ export default function JobApplicationForm({
   };
 
   const renderField = (field: FormField) => {
-    const commonClasses = "w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary";
-    
+    const commonClasses = "w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 ease-in-out placeholder:text-muted-foreground/50";
+
     switch (field.type) {
       case 'text':
       case 'email':
@@ -199,7 +199,7 @@ export default function JobApplicationForm({
             required={field.required}
           />
         );
-      
+
       case 'textarea':
         return (
           <textarea
@@ -213,40 +213,49 @@ export default function JobApplicationForm({
             required={field.required}
           ></textarea>
         );
-      
+
       case 'select':
         return (
-          <select
-            id={field.id}
-            name={field.id}
-            value={formData[field.id] || ''}
-            onChange={handleChange}
-            className={commonClasses}
-            required={field.required}
-          >
-            {field.options?.map((option, idx) => (
-              <option key={idx} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id={field.id}
+              name={field.id}
+              value={formData[field.id] || ''}
+              onChange={handleChange}
+              className={`${commonClasses} appearance-none cursor-pointer`}
+              required={field.required}
+            >
+              {field.options?.map((option, idx) => (
+                <option key={idx} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-muted-foreground">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+              </svg>
+            </div>
+          </div>
         );
-      
+
       case 'file':
         return (
           <div className="mt-2">
             {!resumeFile ? (
               <label
                 htmlFor={field.id}
-                className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-secondary hover:bg-gray-50 transition-colors"
+                className="group flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary hover:bg-primary/5 transition-all duration-300"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Upload className="w-10 h-10 mb-3 text-gray-400" />
-                  <p className="mb-2 text-sm text-gray-500">
+                  <div className="p-3 bg-secondary/10 rounded-full mb-3 group-hover:bg-primary/10 transition-colors">
+                    <Upload className="w-6 h-6 text-secondary group-hover:text-primary transition-colors" />
+                  </div>
+                  <p className="mb-1 text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                     <span className="font-semibold">Click to upload</span> or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500">
-                    {field.accept ? field.accept.toUpperCase() : 'All files'} 
+                  <p className="text-xs text-muted-foreground">
+                    {field.accept ? field.accept.toUpperCase() : 'All files'}
                     {field.maxSize ? ` (MAX. ${(field.maxSize / 1024 / 1024).toFixed(0)}MB)` : ''}
                   </p>
                 </div>
@@ -259,16 +268,16 @@ export default function JobApplicationForm({
                 />
               </label>
             ) : (
-              <div className="flex items-center justify-between p-4 border border-gray-300 rounded-lg bg-gray-50">
+              <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-card animate-fade-in shadow-sm">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 w-10 h-10 bg-primary rounded flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm">
+                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <span className="text-primary font-bold text-xs">
                       {resumeFile.name.split('.').pop()?.toUpperCase()}
                     </span>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-900">{resumeFile.name}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm font-medium text-foreground truncate max-w-[200px]">{resumeFile.name}</p>
+                    <p className="text-xs text-muted-foreground">
                       {(resumeFile.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
@@ -276,7 +285,7 @@ export default function JobApplicationForm({
                 <button
                   type="button"
                   onClick={removeFile}
-                  className="flex-shrink-0 text-red-500 hover:text-red-700 transition-colors"
+                  className="flex-shrink-0 p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-all"
                   aria-label="Remove file"
                 >
                   <X className="w-5 h-5" />
@@ -285,7 +294,7 @@ export default function JobApplicationForm({
             )}
           </div>
         );
-      
+
       default:
         return null;
     }
@@ -297,17 +306,17 @@ export default function JobApplicationForm({
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md border border-secondary">
-      <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-6">{formTitle}</h2>
+    <div className="w-full">
+      {formTitle && <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-6">{formTitle}</h2>}
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {formFields.map((field) => {
             const isFullWidth = shouldBeFullWidth(field);
-            
+
             return (
               <div key={field.id} className={isFullWidth ? "md:col-span-2" : ""}>
-                <label htmlFor={field.id} className="block text-theme-body font-medium mb-2">
-                  {field.label} {field.required && <span className="text-red-500">*</span>}
+                <label htmlFor={field.id} className="block text-foreground/80 text-sm font-semibold mb-2 ml-1">
+                  {field.label} {field.required && <span className="text-destructive">*</span>}
                 </label>
                 {renderField(field)}
               </div>
@@ -316,15 +325,24 @@ export default function JobApplicationForm({
         </div>
 
         {/* Submit Button */}
-        <div className="flex justify-start">
+        <div className="pt-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`bg-accent hover:bg-accent/80 text-accent-foreground font-bold py-3 px-8 rounded-full transition duration-300 ${
-              isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
+            className={`w-full md:w-auto min-w-[200px] bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed transform-none' : ''
+              }`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Application'}
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Submitting...
+              </>
+            ) : (
+              'Submit Application'
+            )}
           </button>
         </div>
       </form>

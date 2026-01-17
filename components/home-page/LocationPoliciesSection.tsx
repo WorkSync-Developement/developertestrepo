@@ -136,45 +136,49 @@ const LocationPoliciesSection = async () => {
     const gridContainerWidth = locationCount === 2 ? 'max-w-4xl mx-auto' : '';
 
     return (
-      <section className="py-16 relative" style={sectionStyle}>
+      <section className="py-16 sm:py-24 bg-background">
         <Divider position="top" />
         
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="text-center mb-12 animation-fade-up">
-            <Badge className="mb-4" style={badgeStyle}>
-              <span>Insurance by Location</span>
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6 relative" style={headingStyle}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
               Find Coverage Near You
-              <div className="h-1 w-24 rounded mx-auto mt-3 opacity-60" style={accentLineStyle}></div>
             </h2>
-            <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12" style={subheadingStyle}>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Explore insurance policies available at each of our locations.
             </p>
           </div>
           
-          <div className={`grid grid-cols-1 md:grid-cols-2 ${lgGridCols} gap-6 justify-items-center ${gridContainerWidth}`}>
-            {locations.map((location) => (
+          <div className={`grid grid-cols-1 md:grid-cols-2 ${lgGridCols} gap-8 justify-items-center ${gridContainerWidth}`}>
+            {locations.map((location, idx) => (
               <Link 
                 href={`/locations/${location.location_slug}/policies`} 
                 key={location.id}
-                className="block w-full max-w-md transform hover:-translate-y-1 transition-all duration-300"
+                className="block w-full max-w-md group"
               >
                 <div 
-                  className="rounded-xl shadow-lg border p-8 hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer"
-                  style={cardStyle}
+                  className="bg-white rounded-xl p-8 border border-border shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full animate-fade-in-up"
+                  style={{
+                    animationDelay: `${idx * 0.1}s`,
+                    opacity: 0,
+                    animationFillMode: 'forwards',
+                  }}
                 >
-                  <h3 className="text-2xl font-heading font-bold mb-3 text-center" style={cardHeadingStyle}>
-                    {location.location_name}
-                  </h3>
-                  <div className="h-1 w-16 rounded mx-auto mb-4 opacity-60" style={accentLineStyle}></div>
-                  <p className="mb-6 text-center flex-grow" style={cardBodyStyle}>
-                    {location.city}, {location.state}
-                  </p>
-                  <div className="text-center mt-auto">
-                    <span className="group inline-flex items-center gap-2 font-medium transition-colors" style={linkStyle}>
-                      View Policies
-                      <img src="/Images/icons/arrow-right.svg" alt="Arrow Right" className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
+                      <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">{location.location_name}</h3>
+                      <p className="text-sm text-muted-foreground">{location.city}, {location.state}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-auto">
+                    <span className="inline-flex items-center justify-center w-full px-4 py-2 rounded-lg bg-white border border-primary text-primary font-medium hover:bg-primary/5 transition">
+                      View Policies →
                     </span>
                   </div>
                 </div>
@@ -192,45 +196,122 @@ const LocationPoliciesSection = async () => {
     if (policyPages.length === 0) return null;
 
     return (
-      <section className="py-16 relative" style={sectionStyle}>
+      <section className="py-20 md:py-28 relative overflow-hidden" style={sectionStyle}>
         <Divider position="top" />
         
-        <div className="container mx-auto px-4 max-w-screen-xl">
-          <div className="text-center mb-12 animation-fade-up">
-            <Badge className="mb-4" style={badgeStyle}>
-              <span>Our Services</span>
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6 relative" style={headingStyle}>
+        {/* Decorative Background Pattern */}
+        <div className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-primary) 1px, transparent 0)',
+            backgroundSize: '40px 40px',
+          }}
+        />
+        
+        <div className="container mx-auto px-6 max-w-screen-xl relative z-10">
+          <div className="text-center mb-16 animate-fade-in-up">
+            {/* Premium Badge */}
+            <div className="inline-flex mb-6">
+              <Badge className="text-base font-bold px-6 py-3 shadow-lg" style={{
+                ...badgeStyle,
+                boxShadow: 'var(--shadow-lg)',
+                border: '2px solid rgba(46, 38, 11, 0.3)',
+              }}>
+                <span className="flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Our Services
+                </span>
+              </Badge>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 relative px-4" style={{
+              ...headingStyle,
+              lineHeight: '1.2',
+            }}>
               Insurance Solutions For You
-              <div className="h-1 w-24 rounded mx-auto mt-3 opacity-60" style={accentLineStyle}></div>
+              
+              {/* Decorative Underline */}
+              <div className="flex justify-center mt-6">
+                <div className="h-1.5 w-32 rounded-full" style={{
+                  background: 'linear-gradient(90deg, transparent 0%, var(--color-accent) 50%, transparent 100%)',
+                }}></div>
+              </div>
             </h2>
-            <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12" style={subheadingStyle}>
+            
+            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{
+              ...subheadingStyle,
+              fontWeight: '500',
+            }}>
               Explore our comprehensive insurance coverage options designed to protect what matters most.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {policyPages.map((policy) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 md:gap-8 mb-16">
+            {policyPages.map((policy, idx) => (
               <Link 
                 href={`/policies/${policy.slug}`} 
                 key={policy.id}
-                className="block transform hover:-translate-y-1 transition-all duration-300"
+                className="block group"
               >
                 <div 
-                  className="rounded-xl shadow-lg border p-8 hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer"
-                  style={cardStyle}
+                  className="relative rounded-2xl border-2 p-8 transition-all duration-500 flex flex-col h-full cursor-pointer overflow-hidden animate-fade-in-up"
+                  style={{
+                    ...cardStyle,
+                    boxShadow: 'var(--shadow-lg)',
+                    minHeight: '280px',
+                    animationDelay: `${idx * 0.05}s`,
+                    opacity: 0,
+                    animationFillMode: 'forwards',
+                  }}
                 >
-                  <h3 className="text-xl font-heading font-bold mb-3 text-center" style={cardHeadingStyle}>
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-accent-soft) 0%, transparent 100%)',
+                    }}
+                  />
+                  
+                  {/* Top accent bar */}
+                  <div className="absolute top-0 left-0 right-0 h-1.5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
+                    style={{
+                      background: 'linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)',
+                    }}
+                  />
+                  
+                  {/* Icon Container */}
+                  <div className="relative z-10 flex justify-center mb-4">
+                    <div className="flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
+                      style={{
+                        background: 'linear-gradient(135deg, var(--color-accent-soft) 0%, rgba(212, 175, 55, 0.15) 100%)',
+                        boxShadow: 'var(--shadow-sm)',
+                      }}>
+                      <svg className="w-7 h-7" style={{ color: 'var(--color-accent)' }} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <h3 className="relative z-10 text-xl font-heading font-bold mb-3 text-center transition-colors duration-300" style={cardHeadingStyle}>
                     {policy.title}
                   </h3>
-                  <div className="h-1 w-16 rounded mx-auto mb-4 opacity-60" style={accentLineStyle}></div>
-                  <p className="text-sm mb-4 text-center" style={cardBodyStyle}>
+                  
+                  <div className="relative z-10 flex justify-center mb-4">
+                    <div className="h-1 w-16 rounded-full transition-all duration-500 group-hover:w-24" style={{
+                      background: 'linear-gradient(90deg, var(--color-accent) 0%, transparent 100%)',
+                    }}></div>
+                  </div>
+                  
+                  <p className="relative z-10 text-sm mb-4 text-center flex-grow leading-relaxed" style={cardBodyStyle}>
                     {policy.content_summary}
                   </p>
-                  <div className="text-center mt-auto">
-                    <span className="group inline-flex items-center gap-2 font-medium transition-colors" style={linkStyle}>
+                  
+                  <div className="relative z-10 text-center mt-auto">
+                    <span className="inline-flex items-center gap-2 font-bold text-sm transition-all duration-300 group-hover:gap-3" style={linkStyle}>
                       Learn More
-                      <img src="/Images/icons/arrow-right.svg" alt="Arrow Right" className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+                      <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
                     </span>
                   </div>
                 </div>
@@ -238,14 +319,20 @@ const LocationPoliciesSection = async () => {
             ))}
           </div>
           
-          <div className="mt-12 text-center">
+          {/* CTA Button - Premium Design */}
+          <div className="text-center">
             <Link 
               href="/policies" 
-              className="inline-flex items-center gap-2 font-bold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:opacity-80"
-              style={buttonStyle}
+              className="inline-flex items-center gap-3 font-bold py-5 px-10 rounded-full text-lg transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 group"
+              style={{
+                ...buttonStyle,
+                boxShadow: 'var(--shadow-xl)',
+              }}
             >
               View All Policies
-              <img src="/Images/icons/arrow-right.svg" alt="Arrow Right" className="h-[18px] w-[18px]" />
+              <svg className="w-6 h-6 transition-transform duration-300 group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
             </Link>
           </div>
         </div>
