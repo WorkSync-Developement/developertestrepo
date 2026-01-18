@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Search, MapPin, ArrowUpRight, X } from 'lucide-react';
+import { Phone, Search, MapPin, ArrowUpRight, X, Menu, Home, Briefcase, Mail, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import SearchBar from 'components/search/SearchBar';
 import { normalizePhoneNumber } from '@/lib/utils';

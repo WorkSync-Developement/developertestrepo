@@ -28,14 +28,14 @@ const HeroCTAButton: React.FC<HeroCTAButtonProps> = ({
       {isMultiLocation ? (
         <button
           onClick={() => setIsPopupOpen(true)}
-          className="px-8 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition"
+          className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-brand text-white font-semibold shadow-lg hover:shadow-xl hover:bg-brand/90 transition-all duration-300"
         >
           Find a Location
         </button>
       ) : (
         <Link
           href="/contact"
-          className="px-8 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition"
+          className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-brand text-white font-semibold shadow-lg hover:shadow-xl hover:bg-brand/90 transition-all duration-300"
         >
           Find a Location
         </Link>
@@ -43,7 +43,7 @@ const HeroCTAButton: React.FC<HeroCTAButtonProps> = ({
       
       <Link
         href="/contact"
-        className="px-8 py-3 rounded-lg border-2 border-white text-white font-semibold hover:bg-white/10 transition"
+        className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-[#d4af37] text-white font-bold shadow-lg hover:shadow-xl hover:bg-[#d4af37]/90 transition-all duration-300"
       >
         Get a Quote
       </Link>

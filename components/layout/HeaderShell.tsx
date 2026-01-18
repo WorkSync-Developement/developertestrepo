@@ -1,4 +1,4 @@
-import HeaderBar from 'components/layout/HeaderBar';
+import ModernHeaderBar from 'components/layout/ModernHeaderBar';
 import { getClientData } from '@/lib/client';
 import { getFeatures, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
@@ -23,20 +23,23 @@ export default async function HeaderShell({ locationPrefix }: HeaderShellProps) 
 	]);
 
 	// Get website name from client_website or clients table
-	const websiteName = clientData?.agency_name;
+	const websiteName = clientData?.agency_name || "Lehmann Agency";
 
 	// Merge isMultiLoc into features so HeaderBar gets the correct multi-location state
 	const mergedFeatures = features 
 		? { ...features, multi_location: isMultiLoc }
 		: { multi_location: isMultiLoc };
 
+	// Force logo.png as fallback if no logo URL from theme
+	const finalLogoUrl = theme?.website_logo_url || '/logo.png';
+
 	return (
-		<HeaderBar
+		<ModernHeaderBar
 			websiteName={websiteName}
 			phone={clientData?.phone}
 			locationPrefix={locationPrefix}
-			logoUrl={theme?.fav_icon_url}
-			showSiteName={theme?.show_client_site_name ?? true}
+			logoUrl={finalLogoUrl}
+			showSiteName={false}
 			features={mergedFeatures}
 			navbarSettings={theme?.navbar_settings}
 			ctaSettings={theme?.cta_settings}

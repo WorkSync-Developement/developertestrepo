@@ -1,12 +1,12 @@
 import React from 'react';
 import { Metadata } from 'next';
-import HeroSection from '@/components/home-page/HeroSection';
-import IntroSection from '@/components/home-page/IntroSection';
-import LocationPoliciesSection from '@/components/home-page/LocationPoliciesSection';
+import ModernHeroSectionWrapper from '@/components/home-page/ModernHeroSectionWrapper';
+import ModernIntroSection from '@/components/home-page/ModernIntroSection';
+import ModernLocationsSectionWrapper from '@/components/home-page/ModernLocationsSectionWrapper';
 import Testimonials from '@/components/home-page/TestimonialsWrapper';
-import HomeCTA from '@/components/home-page/HomeCTA';
-import FAQPreview from '@/components/home-page/FAQPreviewWrapper';
-import InsuranceCareersSection from '@/components/home-page/InsuranceCareersSection';
+import ModernCTASectionWrapper from '@/components/home-page/ModernCTASectionWrapper';
+import ModernFAQSectionWrapper from '@/components/home-page/ModernFAQSectionWrapper';
+import ModernCareersSection from '@/components/home-page/ModernCareersSection';
 import { getClientData } from '@/lib/client';
 
 // Page-specific metadata overrides - inherits from layout.tsx
@@ -41,13 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Home() {
   return (
     <div className="home-content">
-      <HeroSection />
-      <IntroSection />
-      <LocationPoliciesSection />
+      <ModernHeroSectionWrapper />
+      <ModernIntroSection />
+      <ModernLocationsSectionWrapper />
       <Testimonials />
-      <HomeCTA />
-      <FAQPreview />
-      <InsuranceCareersSection />
+      <ModernCTASectionWrapper />
+      <ModernFAQSectionWrapper />
+      <ModernCareersSection />
     </div>
   );
 }

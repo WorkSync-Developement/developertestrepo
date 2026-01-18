@@ -1,6 +1,6 @@
 import React from 'react';
 import { supabase } from '@/lib/supabase';
-import Testimonials from './Testimonials';
+import ModernTestimonials from './ModernTestimonials';
 
 interface ReviewItem {
   author: string;
@@ -127,5 +127,12 @@ export default async function TestimonialsWrapper({ locationId }: { locationId?:
     return null;
   }
 
-  return <Testimonials reviewsContent={reviewsContent} />;
+  return (
+    <ModernTestimonials
+      reviews={reviewsContent.reviews.items}
+      title={reviewsContent.subtitle.content}
+      description={reviewsContent.description.content}
+      tagline={reviewsContent.tagline.content}
+    />
+  );
 }

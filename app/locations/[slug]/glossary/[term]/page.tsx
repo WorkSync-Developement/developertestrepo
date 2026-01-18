@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import RelatedPolicyPages from '@/components/glossary/RelatedPolicyPages';
 import InsuranceCTA from '@/components/common/InsuranceCTA';
 import Breadcrumb from '@/components/common/Breadcrumb';
-import { Divider } from '@/components/ui/Divider';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation } from '@/lib/website';
 import { validateAndGetRelatedPolicies } from '@/lib/services/glossary';
@@ -107,6 +106,7 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
   const supabase = await getSupabaseClient();
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
   const locationId = websiteData.client_locations?.id;
+  const locationName = websiteData.client_locations?.location_name || '';
 
   const { data: term } = await supabase
     .from('client_insurance_glossary_pages')
@@ -120,7 +120,7 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
   if (!term) {
     notFound();
   }
-  
+
   // related_policy_links is already an array of {slug, title} from AI generation
   const relatedPolicyLinks = term.related_policy_links || [];
   // Validate against published policies for this location
@@ -162,18 +162,30 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Hero Section */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
-        <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
+    <main className="flex-grow bg-background">
+      <section className="w-full py-20 sm:py-24 relative overflow-hidden bg-background">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-y-1/2"></div>
+        </div>
+
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium bg-secondary/10 text-secondary mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+            </span>
+            <span>Insurance Term</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">
             {term.term}
           </h1>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Clear definitions and plain-language explanations from our {locationName} insurance team.
+          </p>
         </div>
-        <Divider position="bottom" />
       </section>
 
-      {/* Breadcrumb */}
       <div className="container mx-auto px-4 max-w-4xl pt-6">
         <Breadcrumb
           items={[
@@ -184,17 +196,14 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
         />
       </div>
 
-      {/* Main Content */}
       <section className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto bg-card-bg rounded-xl shadow-lg p-8 border border-card-border">
+        <div className="max-w-4xl mx-auto bg-card rounded-2xl shadow-sm p-8 sm:p-10 border border-border">
           {processedBody && (
-            <div 
-              className="prose prose-lg max-w-none text-theme-body prose-headings:text-primary prose-headings:font-heading prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-5 prose-h3:mb-2 prose-p:leading-relaxed prose-p:mb-4 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-primary" 
-              dangerouslySetInnerHTML={{ __html: processedBody }} 
+            <div
+              className="prose prose-lg max-w-none text-muted-foreground prose-headings:text-foreground prose-headings:font-heading prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-5 prose-h3:mb-2 prose-p:leading-relaxed prose-p:mb-4 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-primary"
+              dangerouslySetInnerHTML={{ __html: processedBody }}
             />
           )}
-
-          {/* Related Policy Pages */}
           <div className="mt-12">
             <RelatedPolicyPages relatedPolicyPages={relatedPolicyPages} />
           </div>
