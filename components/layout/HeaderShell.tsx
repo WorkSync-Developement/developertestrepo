@@ -1,4 +1,4 @@
-import HeaderBar from 'components/layout/HeaderBar';
+ import { getVariantComponent } from '@/lib/variants';
 import { getClientData } from '@/lib/client';
 import { getFeatures, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
@@ -13,6 +13,9 @@ export default async function HeaderShell({ locationPrefix }: HeaderShellProps) 
 		? locationPrefix.replace('/locations/', '') 
 		: undefined;
 
+	// Get the Header component for the current variant
+	const Header = await getVariantComponent<React.ComponentType<any>>('Header');
+
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [clientData, features, theme, isMultiLoc, locations] = await Promise.all([
 		getClientData(),
@@ -25,13 +28,13 @@ export default async function HeaderShell({ locationPrefix }: HeaderShellProps) 
 	// Get website name from client_website or clients table
 	const websiteName = clientData?.agency_name;
 
-	// Merge isMultiLoc into features so HeaderBar gets the correct multi-location state
+	// Merge isMultiLoc into features so Header gets the correct multi-location state
 	const mergedFeatures = features 
 		? { ...features, multi_location: isMultiLoc }
 		: { multi_location: isMultiLoc };
 
 	return (
-		<HeaderBar
+		<Header
 			websiteName={websiteName}
 			phone={clientData?.phone}
 			locationPrefix={locationPrefix}

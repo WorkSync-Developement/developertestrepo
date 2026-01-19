@@ -1,4 +1,4 @@
-import Footer from 'components/layout/Footer';
+import { getVariantComponent } from '@/lib/variants';
 import { getClientData } from '@/lib/client';
 import { getWebsiteData, getWebsiteBySlug, getBadges, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
@@ -10,6 +10,9 @@ interface FooterShellProps {
 }
 
 export default async function FooterShell({ locationPrefix, locationSlug }: FooterShellProps) {
+	// Get the Footer component for the current variant
+	const Footer = await getVariantComponent<React.ComponentType<any>>('Footer');
+
 	const [client, websiteData, badges, isMultipleLocation, theme, allLocations] = await Promise.all([
 		getClientData(),
 		getWebsiteData(),
