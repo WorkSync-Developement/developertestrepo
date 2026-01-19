@@ -93,8 +93,8 @@ export default async function HomeCTA(): Promise<React.ReactElement | null> {
   return (
     <section className="py-20 relative w-full overflow-hidden bg-gradient-modern-cta">
       {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, #ffffff, transparent)' }}></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, #ffffff, transparent)' }}></div>
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, var(--color-background-alt, #ffffff), transparent)' }}></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, var(--color-background-alt, #ffffff), transparent)' }}></div>
       
       <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
         <div className="text-center mb-16">
@@ -133,7 +133,7 @@ export default async function HomeCTA(): Promise<React.ReactElement | null> {
                         <MapPin className="w-8 h-8 text-white" />
                       </div>
                     </div>
-                    <h3 className="text-2xl font-heading font-bold mb-3 text-center text-black group-hover:text-[#5b7c99] transition-colors">
+                    <h3 className="text-2xl font-heading font-bold mb-3 text-center transition-colors" style={{ color: 'var(--color-text-primary)' }}>
                       {location.location_name}
                     </h3>
                     <p className="text-center mb-6 text-theme-body font-medium">
@@ -143,7 +143,7 @@ export default async function HomeCTA(): Promise<React.ReactElement | null> {
                     {/* Contact features */}
                     <div className="mb-8 space-y-2">
                       <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
-                        <Phone className="w-4 h-4" style={{ color: '#5b7c99' }} />
+                        <Phone className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
                         <span>Call Today</span>
                       </div>
                       <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
@@ -181,7 +181,7 @@ export default async function HomeCTA(): Promise<React.ReactElement | null> {
                       <Mail className="w-10 h-10 text-white" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-heading font-bold mb-4 text-black group-hover:text-[#5b7c99] transition-colors">
+                  <h3 className="text-3xl font-heading font-bold mb-4 transition-colors" style={{ color: 'var(--color-text-primary)', }} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-primary)'; }}>
                     {clientData?.agency_name || 'Our Office'}
                   </h3>
                   <p className="mb-8 text-theme-body font-medium text-lg">
@@ -191,11 +191,11 @@ export default async function HomeCTA(): Promise<React.ReactElement | null> {
                   {/* Contact features */}
                   <div className="mb-8 space-y-3">
                     <div className="flex items-center justify-center gap-2 text-theme-body">
-                      <Phone className="w-5 h-5" style={{ color: '#5b7c99' }} />
+                      <Phone className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
                       <span>Call Today</span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-theme-body">
-                      <Mail className="w-5 h-5" style={{ color: '#5b7c99' }} />
+                      <Mail className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
                       <span>Email Us</span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-theme-body">

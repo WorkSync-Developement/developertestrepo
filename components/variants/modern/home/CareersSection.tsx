@@ -57,23 +57,24 @@ export default async function CareersSection(): Promise<React.ReactElement | nul
   if (multiLocation && locations.length > 0) {
     const cityNames = locations.map(loc => loc.city);
     return (
-      <section className="py-20 relative w-full overflow-hidden" style={{ background: 'linear-gradient(to bottom, #F6F8FA, #ffffff)' }}>
+      <section className="py-20 relative w-full overflow-hidden" style={{ background: 'linear-gradient(to bottom, var(--color-background-alt, #f8fafc), var(--color-background, #ffffff))' }}>
         {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20" style={{ background: 'radial-gradient(circle, #5b7c99, transparent)' }}></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20" style={{ background: 'radial-gradient(circle, #355F4E, transparent)' }}></div>
+
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-20" style={{ background: 'radial-gradient(circle, var(--color-primary), transparent)' }}></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-20" style={{ background: 'radial-gradient(circle, var(--color-secondary), transparent)' }}></div>
         
         <div className="container mx-auto px-4 max-w-screen-xl relative z-10">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 mb-6">
-              <Badge className="text-sm text-white" style={{ backgroundColor: '#5b7c9a' }}>
+              <Badge className="text-sm" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}>
                 Join Our Team
               </Badge>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
-              <span className="text-black">Insurance Careers </span>
-              <span style={{ color: '#5b7c99' }}>in {cityNames.join(', ')}</span>
+              <span className="text-theme-text">Insurance Careers </span>
+              <span style={{ color: 'var(--color-primary)' }}>in {cityNames.join(', ')}</span>
             </h2>
-            <div className="w-32 h-1.5 rounded-full mx-auto mb-6" style={{ background: 'linear-gradient(to right, #5b7c99, #355F4E, #5b7c99)' }}></div>
+            <div className="w-32 h-1.5 rounded-full mx-auto mb-6" style={{ background: 'linear-gradient(to right, var(--color-primary), var(--color-secondary), var(--color-primary))' }}></div>
             <p className="text-lg md:text-xl text-theme-body max-w-3xl mx-auto leading-relaxed">
               Start your career in insurance with us.
             </p>
@@ -86,7 +87,7 @@ export default async function CareersSection(): Promise<React.ReactElement | nul
                 href={`/locations/${location.location_slug}/apply`}
                 className="block group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] max-w-sm"
               >
-                <div className="relative bg-white rounded-3xl border-2 border-transparent p-8 hover:border-[#5b7c99] hover:shadow-2xl transition-all duration-300 h-full flex flex-col hover:-translate-y-2 overflow-hidden shadow-md">
+                <div className="relative bg-theme-bg-alt rounded-3xl border-2 border-transparent p-8 hover:shadow-2xl transition-all duration-300 h-full flex flex-col hover:-translate-y-2 overflow-hidden shadow-md" style={{ borderColor: 'transparent' }}>
                   {/* Gradient overlay on hover */}
                   <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   
@@ -96,10 +97,10 @@ export default async function CareersSection(): Promise<React.ReactElement | nul
                   <div className="relative z-10">
                     <div className="flex items-center justify-center mb-6">
                       <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300 bg-gradient-modern-primary">
-                        <Briefcase className="w-10 h-10 text-white" />
+                        <Briefcase className="w-10 h-10 text-primary-foreground" />
                       </div>
                     </div>
-                    <h3 className="text-2xl font-heading font-bold mb-3 text-center text-black group-hover:text-[#5b7c99] transition-colors">
+                    <h3 className="text-2xl font-heading font-bold mb-3 text-center transition-colors" style={{ color: 'var(--color-text-primary)' }}>
                       {location.location_name}
                     </h3>
                     <p className="text-center mb-6 text-theme-body font-medium">
@@ -109,7 +110,7 @@ export default async function CareersSection(): Promise<React.ReactElement | nul
                     {/* Features list */}
                     <div className="mb-8 space-y-2">
                       <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
-                        <Users className="w-4 h-4" style={{ color: '#5b7c99' }} />
+                        <Users className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
                         <span>Growing Team</span>
                       </div>
                       <div className="flex items-center justify-center gap-2 text-sm text-theme-body">
@@ -164,7 +165,7 @@ export default async function CareersSection(): Promise<React.ReactElement | nul
           
           <div className="flex justify-center">
             <Link href="/apply" className="block group w-full max-w-md">
-              <div className="relative bg-white rounded-3xl border-2 border-transparent p-10 hover:border-[#5b7c99] hover:shadow-2xl transition-all duration-300 flex flex-col hover:-translate-y-2 overflow-hidden shadow-lg text-center">
+              <div className="relative bg-theme-bg-alt rounded-3xl border-2 border-transparent p-10 hover:shadow-2xl transition-all duration-300 flex flex-col hover:-translate-y-2 overflow-hidden shadow-lg text-center" style={{ borderColor: 'transparent' }}>
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 from-modern-primary-5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 

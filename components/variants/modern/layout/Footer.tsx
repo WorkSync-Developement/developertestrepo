@@ -83,12 +83,12 @@ export default function Footer({
     <footer
       className="relative overflow-hidden"
       style={{
-        backgroundColor: '#09314a',
-        color: '#ffffff',
+        backgroundColor: 'var(--footer-bg, var(--color-primary))',
+        color: 'var(--footer-text, var(--color-primary-foreground))',
       }}
     >
       {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, #5b7c99, transparent)' }}></div>
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 opacity-10" style={{ background: 'radial-gradient(circle, var(--color-primary), transparent)' }}></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full translate-y-1/2 -translate-x-1/2 opacity-10 bg-gradient-modern-radial-primary"></div>
       
       <div className="container mx-auto px-4 py-16 relative z-10">
@@ -119,9 +119,9 @@ export default function Footer({
                     key={idx}
                     className="inline-block px-4 py-2 text-xs rounded-full font-medium"
                     style={{
-                      backgroundColor: 'rgba(91, 124, 153, 0.2)',
-                      color: '#ffffff',
-                      border: '1px solid rgba(91, 124, 153, 0.3)',
+                      backgroundColor: 'var(--footer-badge-bg, var(--color-secondary))',
+                      color: 'var(--footer-badge-text, var(--color-primary-foreground))',
+                      border: `1px solid color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 30%, transparent)`,
                     }}
                   >
                     {badge.name}
@@ -141,7 +141,8 @@ export default function Footer({
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/80 hover:text-white transition-colors inline-flex items-center gap-2 group"
+                    className="text-sm text-white/80 transition-colors inline-flex items-center gap-2 group"
+                   
                   >
                     <span>{link.label}</span>
                     <ArrowUp size={14} className="rotate-45 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform opacity-0 group-hover:opacity-100" />
@@ -152,7 +153,7 @@ export default function Footer({
                 <li>
                   <button
                     onClick={() => setIsSocialLinksModalOpen(true)}
-                    className="text-sm text-white/80 hover:text-white transition-colors text-left inline-flex items-center gap-2 group"
+                    className="text-sm text-white/80 transition-colors text-left inline-flex items-center gap-2 group"
                   >
                     <span>Social Links</span>
                     <ArrowUp size={14} className="rotate-45 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform opacity-0 group-hover:opacity-100" />
@@ -170,8 +171,8 @@ export default function Footer({
             <div className="space-y-4 text-sm">
               {address && (
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}>
-                    <MapPin size={16} className="text-white" />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 20%, transparent)' }}>
+                    <MapPin size={16} style={{ color: 'var(--footer-text, var(--color-primary-foreground))' }} />
                   </div>
                   <div className="text-white/80">
                     <p>{address}</p>
@@ -187,9 +188,10 @@ export default function Footer({
               {phoneHref && (
                 <a
                   href={phoneHref}
-                  className="flex items-center gap-3 transition-colors hover:text-white text-white/80 group"
+                  className="flex items-center gap-3 text-white/80 transition-colors group"
+                 
                 >
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 20%, transparent)' }}>
                     <Phone size={16} className="text-white" />
                   </div>
                   <span>{formattedPhone}</span>
@@ -209,7 +211,8 @@ export default function Footer({
                   <li key={location.id}>
                     <Link
                       href={`/locations/${location.location_slug}`}
-                      className="text-white/80 hover:text-white transition-colors inline-flex items-center gap-2 group"
+                      className="text-white/80 transition-colors inline-flex items-center gap-2 group"
+                    
                     >
                       <MapPin size={14} className="opacity-60 group-hover:opacity-100 transition-opacity" />
                       <span>{location.location_name || `${location.city}, ${location.state}`}</span>
@@ -224,7 +227,7 @@ export default function Footer({
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-white/70 text-sm">
+            <p className="text-sm text-white/80">
               © {currentYear} {agencyName || 'Company'}. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
@@ -236,7 +239,7 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 20%, transparent)' }}
                       aria-label="Facebook"
                     >
                       <Facebook size={18} className="text-white" />
@@ -248,10 +251,10 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 20%, transparent)' }}
                       aria-label="Instagram"
                     >
-                      <Instagram size={18} className="text-white" />
+                      <Instagram size={18} style={{ color: 'var(--footer-text, var(--color-primary-foreground))' }} />
                     </a>
                   )}
                   {socialLinks.linkedin && (
@@ -260,7 +263,7 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 20%, transparent)' }}
                       aria-label="LinkedIn"
                     >
                       <Linkedin size={18} className="text-white" />
@@ -272,7 +275,7 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                      style={{ backgroundColor: 'rgba(91, 124, 153, 0.2)' }}
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 20%, transparent)' }}
                       aria-label="YouTube"
                     >
                       <Youtube size={18} className="text-white" />
@@ -284,7 +287,7 @@ export default function Footer({
               <button
                 onClick={scrollToTop}
                 className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                style={{ backgroundColor: 'rgba(91, 124, 153, 0.3)' }}
+                style={{ backgroundColor: 'color-mix(in srgb, var(--footer-badge-bg, var(--color-secondary)) 30%, transparent)' }}
                 aria-label="Back to top"
               >
                 <ArrowUp size={18} className="text-white" />
