@@ -1,4 +1,4 @@
-import Footer from 'components/layout/Footer';
+import ModernFooter from 'components/layout/ModernFooter';
 import { getClientData } from '@/lib/client';
 import { getWebsiteData, getWebsiteBySlug, getBadges, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getThemeSettings } from '@/lib/theme';
@@ -47,22 +47,17 @@ export default async function FooterShell({ locationPrefix, locationSlug }: Foot
 	const phone = locationData?.client_locations?.phone || websiteData?.phone || client?.phone;
 
 	return (
-		<Footer 
+		<ModernFooter 
 			agencyName={client?.agency_name} 
 			city={city} 
 			state={state} 
-			postalCode={postalCode} 
 			phone={phone}
 			address={address}
-			locationName={locationName}
 			socialLinks={websiteData?.social_links}
-			badges={badges}
-			tagline={websiteData?.tagline}
 			locationPrefix={locationPrefix}
 			isMultiLocation={isMultipleLocation}
 			footerLogoUrl={theme?.website_logo_url}
 			allLocations={allLocations || []}
-			socialLinksModalData={socialLinksModalData || { locations: [] }}
 		/>
 	);
 }

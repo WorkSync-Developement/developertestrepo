@@ -49,10 +49,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
       className={`relative ${variant === 'fullwidth' ? 'w-full' : 'w-full max-w-xs'}`}
     >
       <div
-        className={`flex items-center bg-white overflow-hidden transition-all ${
+        className={`flex items-center overflow-hidden transition-all ${
           variant === 'header' 
-            ? 'rounded-full border border-gray-300 focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/50' 
-            : 'rounded-lg border-2 border-primary focus-within:ring-2 focus-within:ring-primary/50'
+            ? 'bg-white rounded-full border border-gray-300 focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/50' 
+            : 'bg-card rounded-2xl border border-border focus-within:ring-2 focus-within:ring-primary/20 shadow-sm'
         } ${isFocused ? 'shadow-md' : ''}`}
       >
         <input
@@ -87,7 +87,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           className={`p-2 flex items-center justify-center ${
             variant === 'header' 
               ? 'text-primary hover:text-accent' 
-              : 'bg-accent text-accent-foreground hover:bg-[#003366] px-4'
+              : 'bg-primary text-primary-foreground hover:bg-primary/90 px-4'
           } transition-colors`}
         >
           <SearchIcon className={`${variant === 'header' ? 'h-5 w-5' : 'h-6 w-6'}`} />

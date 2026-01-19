@@ -80,17 +80,38 @@ export default async function SearchPage() {
   ]);
 
   return (
-    <main className="flex-grow">
-      <section className="py-12 bg-theme-bg-alt relative w-full">
-        <div className="container mx-auto px-4 py-4 max-w-screen-lg">
+    <main className="flex-grow bg-background">
+      <section className="w-full py-20 sm:py-24 relative overflow-hidden bg-background">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-y-1/2" />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium bg-secondary/10 text-secondary mb-4">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+            </span>
+            <span>Site-wide search</span>
+          </div>
+
           <SearchHeader />
+
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-6">
+            Find articles, policy pages, FAQs, and more across the entire {clientData?.agency_name || 'agency'} website.
+          </p>
+
           <div className="max-w-2xl mx-auto">
-            <SearchBar variant="fullwidth" placeholder="Search for insurance information, policies, etc..." />
+            <SearchBar
+              variant="fullwidth"
+              placeholder="Search for policies, coverages, topics, or questions..."
+            />
           </div>
         </div>
       </section>
 
-      <section className="py-8 bg-white">
+      <section className="pb-20 pt-8 bg-background">
         <div className="container mx-auto px-4 max-w-screen-lg">
           <Suspense fallback={<div className="text-center py-8">Loading search results...</div>}>
             <SearchResults />

@@ -105,7 +105,7 @@ export default function BlogPosts({ posts, topic, basePath = '/blog' }: { posts:
                 disabled={currentPage === 1}
                 className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${currentPage === 1
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-accent text-accent-foreground hover:bg-[#003366] shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                  : 'bg-accent text-accent-foreground hover:bg-primary shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
                   }`}
                 aria-label="Previous page"
               >
@@ -131,7 +131,7 @@ export default function BlogPosts({ posts, topic, basePath = '/blog' }: { posts:
                 disabled={currentPage === totalPages}
                 className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${currentPage === totalPages
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-accent text-accent-foreground hover:bg-[#003366] shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                  : 'bg-accent text-accent-foreground hover:bg-primary shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
                   }`}
                 aria-label="Next page"
               >

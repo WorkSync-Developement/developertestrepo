@@ -112,52 +112,74 @@ export default async function LocationBlogPage({ params }: PageProps) {
   const agencyName = clientData?.agency_name || '';
 
   return (
-    <main className="flex-grow">
-      {/* Blog Hero */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
-        <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
-            {locationCity || ""}{locationState ? ` ${locationState},` : ""} Insurance Blog
+    <main className="flex-grow bg-background">
+      <section className="w-full py-20 sm:py-24 relative overflow-hidden bg-background">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-y-1/2"></div>
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium bg-secondary/10 text-secondary mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+            </span>
+            <span>Insurance Insights</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">
+            {locationCity || ''}{locationState ? ` ${locationState},` : ''} Insurance Blog
           </h1>
-
-          <div className="h-1 w-32 bg-accent/60 rounded mx-auto mt-2 mb-6" />
-
-          <p className="text-theme-body text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto">
-            Insights, tips, and updates from {agencyName}
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Practical tips, local insights, and expert guidance from {agencyName} to help you make confident coverage decisions.
           </p>
         </div>
-
-        <Divider position="bottom" />
       </section>
 
-      {/* Blog Topics */}
-      <BlogTopics topics={topics} basePath={`/locations/${slug}/blog`} />
+      <section className="pb-20 px-4">
+        <div className="container mx-auto max-w-screen-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
+            <div className="lg:col-span-2">
+              <BlogTopics topics={topics} basePath={`/locations/${slug}/blog`} />
+            </div>
 
-      {/* Newsletter Signup */}
-      <section className="py-16 bg-theme-bg-alt">
-        <div className="container mx-auto px-4 max-w-screen-xl text-center">
-          <h2 className="text-3xl font-heading font-bold text-primary mb-4">
-            Subscribe to Our Newsletter
-          </h2>
-          <p className="text-theme-body mb-8 max-w-2xl mx-auto">
-            Get the latest insurance tips, industry news, and special offers delivered straight to your inbox.
-          </p>
-          <form className="max-w-md mx-auto flex">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-grow px-4 py-3 rounded-l-lg border border-r-0 border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-accent hover:bg-accent/80 text-accent-foreground font-bold py-3 px-6 rounded-r-lg transition duration-300"
-            >
-              Subscribe
-            </button>
-          </form>
+            <aside className="lg:col-span-1 space-y-6 lg:pt-2 lg:sticky lg:top-32 lg:self-start">
+              <section className="bg-card rounded-2xl shadow-sm border border-border p-6 sm:p-7">
+                <h2 className="text-xl font-heading font-bold text-foreground mb-2">
+                  Stay Informed
+                </h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Get the latest insurance tips, industry news, and local updates delivered straight to your inbox.
+                </p>
+                <form className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              </section>
+
+              <section className="bg-card rounded-2xl shadow-sm border border-border p-6 sm:p-7">
+                <h2 className="text-xl font-heading font-bold text-foreground mb-2">
+                  Why Our Blog?
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Articles are written with {locationCity || 'your area'} families and businesses in mind, so you can understand coverage options, avoid gaps, and stay ahead of changes that affect your protection.
+                </p>
+              </section>
+            </aside>
+          </div>
         </div>
       </section>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildLdJsonSchema(clientData, websiteData, slug)) }}

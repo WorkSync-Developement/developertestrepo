@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Search, MapPin, ArrowUpRight, X } from 'lucide-react';
+import { Phone, Search, MapPin, ArrowUpRight, X, Menu, Home, Briefcase, Mail, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import SearchBar from 'components/search/SearchBar';
 import { normalizePhoneNumber } from '@/lib/utils';
@@ -53,12 +54,12 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
   const showFaq = features?.show_faq_page ?? true;
   const showCareers = features?.show_careers_page ?? true;
   const isMultiLocation = features?.multi_location ?? false;
-  
+
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
-  
+
   // Ref for GSAP card animations
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
@@ -88,7 +89,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
     if (typeof window !== 'undefined') {
       setIsScrolled(window.scrollY > 10);
     }
-    
+
     const handleScroll = debounce(() => {
       setIsScrolled(window.scrollY > 10);
     }, 100);
@@ -98,6 +99,19 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
       return () => window.removeEventListener('scroll', handleScroll);
     }
   }, []);
+
+  useEffect(() => {
+    if (!isSearchVisible) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSearchVisible(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchVisible]);
 
   // Toggle menu expansion
   const toggleMenu = useCallback(() => {
@@ -191,8 +205,8 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
 
   const navCards = buildNavCards();
   return (
-    <header 
-      className={`header ${isScrolled ? 'header-scrolled' : ''}`} 
+    <header
+      className={`header ${isScrolled ? 'header-scrolled' : ''}`}
       role="banner"
     >
       <div className="card-nav-container">
@@ -202,27 +216,25 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
         >
           {/* Top Bar - Fixed Height */}
           <div className="card-nav-top">
-            {/* Logo */}
+            {/* Logo - Enhanced with Animation */}
             <div className="flex items-center">
-              <Link href={locationPrefix || '/'} className="flex items-center gap-3">
-                {logoUrl ? (
+              <Link href={locationPrefix || '/'} className="flex items-center gap-3 group transition-all duration-300">
+                <div className="relative">
                   <Image
-                    src={logoUrl}
+                    src={'/logo-removebg-preview.png'}
+                    // src={logoUrl || '/logo.png'}
                     alt={websiteName || "Logo"}
-                    width={120}
-                    height={40}
-                    className="h-8 w-auto object-contain"
+                    width={140}
+                    height={50}
+                    className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                     priority
                   />
-                ) : (
-                  <div className="h-8 w-8 bg-primary rounded flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm">
-                      {(websiteName || "").charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
+                </div>
                 {showSiteName && websiteName && (
-                  <span className="hidden md:inline font-medium font-heading text-lg" style={{ color: 'var(--navbar-agency-name-color)' }}>
+                  <span className="hidden md:inline font-bold font-heading text-xl transition-all duration-300 group-hover:text-opacity-80 text-white"
+                    style={{
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
+                    }}>
                     {websiteName}
                   </span>
                 )}
@@ -230,38 +242,44 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
             </div>
 
             {/* Right side: CTA Button + Hamburger */}
-            <div className="flex items-center gap-3">
-              <Link 
-                href={`tel:${normalizePhoneNumber(navbarSettings?.phone || phone)}`} 
-                className="inline-flex items-center px-4 py-1.5 text-sm md:text-base transition-colors duration-300 font-medium whitespace-nowrap cta-button"
+            <div className="flex items-center gap-4">
+              <Link
+                href={`tel:${normalizePhoneNumber(navbarSettings?.phone || phone)}`}
+                className="inline-flex items-center px-6 py-3 text-sm md:text-base font-bold whitespace-nowrap cta-button group bg-white text-primary hover:opacity-90 transition rounded-lg"
                 style={{
-                  backgroundColor: 'var(--cta-bg-color)',
-                  color: 'var(--cta-text-color)',
                   borderRadius: 'var(--cta-border-radius)',
-                  borderWidth: 'var(--cta-border-width)',
-                  borderColor: 'var(--cta-border-color)',
-                  borderStyle: ctaSettings?.border_width ? 'solid' : 'none',
                 }}
               >
-                {(navbarSettings?.show_icon ?? true) && <Phone size={16} className="mr-1.5" />}
-                <span className="hidden md:inline">{navbarSettings?.text ?? 'Call Today'}</span>
-                <span className="md:hidden">Call</span>
+                {(navbarSettings?.show_icon ?? true) && (
+                  <Phone
+                    size={18}
+                    className="mr-2 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110"
+                  />
+                )}
+                <span className="hidden md:inline relative z-10">{navbarSettings?.text ?? 'Call Today'}</span>
+                <span className="md:hidden relative z-10">Call</span>
               </Link>
 
-              {/* Hamburger Menu */}
+              {/* Hamburger Menu - Enhanced */}
               <div
-                className={`hamburger-menu ${isHamburgerOpen ? 'open' : ''} group`}
+                className={`hamburger-menu ${isHamburgerOpen ? 'open' : ''}`}
                 onClick={toggleMenu}
                 role="button"
                 aria-label={isExpanded ? 'Close menu' : 'Open menu'}
                 tabIndex={0}
-                style={{ color: 'var(--navbar-text-color)' }}
+                style={{ color: 'var(--navbar-text-color, #FFFFFF)' }}
               >
                 <div
-                  className={`hamburger-line ${isHamburgerOpen ? 'translate-y-[4px] rotate-45' : ''} group-hover:opacity-75`}
+                  className={`hamburger-line ${isHamburgerOpen ? 'translate-y-[5px] rotate-45' : ''}`}
+                  style={{
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
                 />
                 <div
-                  className={`hamburger-line ${isHamburgerOpen ? '-translate-y-[4px] -rotate-45' : ''} group-hover:opacity-75`}
+                  className={`hamburger-line ${isHamburgerOpen ? '-translate-y-[5px] -rotate-45' : ''}`}
+                  style={{
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
                 />
               </div>
             </div>
@@ -271,53 +289,103 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
           {isExpanded && (
             <div className="card-nav-dropdown animate-fade-in">
               <div className="card-nav-dropdown-content">
-                {/* Nav Cards */}
+                {/* Nav Cards - Enhanced Premium Design */}
                 {navCards.map((card, idx) => (
                   <div
                     key={`${card.label}-${idx}`}
-                    className="nav-card"
+                    className="nav-card relative overflow-hidden"
                     ref={setCardRef(idx)}
-                    style={{ backgroundColor: card.bgColor, color: card.textColor }}
+                    style={{
+                      backgroundColor: card.bgColor,
+                      color: card.textColor,
+                    }}
                   >
+                    {/* Gradient Accent Line */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-1 opacity-0 transition-opacity duration-300"
+                      style={{
+                        background: 'linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)',
+                      }}
+                    />
+
                     <div className="nav-card-label flex items-center gap-2">
-                      {isMultiLocation && !locationPrefix && <MapPin size={16} />}
+                      {isMultiLocation && !locationPrefix && (
+                        <div className="p-1.5 rounded-lg" style={{ background: 'rgba(255, 255, 255, 0.15)' }}>
+                          <MapPin size={18} />
+                        </div>
+                      )}
                       {card.label}
                     </div>
+
                     <div className="nav-card-links">
                       {card.links.map((link, i) => (
                         <Link
                           key={`${link.label}-${i}`}
-                          className="nav-card-link"
+                          className="nav-card-link group/link"
                           href={link.href}
                           onClick={handleNavClick}
                         >
-                          <ArrowUpRight size={14} aria-hidden="true" />
+                          <ArrowUpRight
+                            size={16}
+                            aria-hidden="true"
+                            className="transition-transform duration-200 group-hover/link:translate-x-1 group-hover/link:-translate-y-1"
+                          />
                           {link.label}
                         </Link>
                       ))}
                     </div>
+
+                    {/* Hover Effect Overlay */}
+                    <div
+                      className="absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%)',
+                      }}
+                    />
                   </div>
                 ))}
 
-                {/* Search Card */}
+                {/* Search Card - Enhanced */}
                 <div
-                  className="nav-card"
+                  className="nav-card relative overflow-hidden"
                   ref={setCardRef(navCards.length)}
                   style={{ backgroundColor: 'var(--color-background-alt)', color: 'var(--color-text-primary)' }}
                 >
-                  <div className="nav-card-label flex items-center gap-2">
-                    <Search size={16} />
+                  {/* Gradient Accent Line */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1 opacity-0 transition-opacity duration-300"
+                    style={{
+                      background: 'linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)',
+                    }}
+                  />
+
+                  <div className="nav-card-label flex items-center gap-2 text-foreground">
+                    <div className="p-1.5 rounded-lg" style={{ background: 'rgba(54, 79, 107, 0.1)' }}>
+                      <Search size={18} className="text-primary" />
+                    </div>
                     Search
                   </div>
                   <div className="nav-card-links">
                     <button
-                      className="nav-card-link w-full text-left"
+                      className="nav-card-link w-full text-left group/link"
                       onClick={toggleSearch}
                     >
-                      <ArrowUpRight size={14} aria-hidden="true" />
+                      <ArrowUpRight
+                        size={16}
+                        aria-hidden="true"
+                        className="transition-transform duration-200 group-hover/link:translate-x-1 group-hover/link:-translate-y-1"
+                      />
                       Search Site
                     </button>
                   </div>
+
+                  {/* Hover Effect Overlay */}
+                  <div
+                    className="absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(54, 79, 107, 0.05) 0%, transparent 100%)',
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -325,24 +393,25 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ websiteName, phone, locationPrefi
         </nav>
       </div>
 
-      {/* Search Overlay */}
       {isSearchVisible && (
-        <div className="fixed inset-0 bg-white z-50 p-4 animate-fade-in" role="dialog" aria-label="Search">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-primary">Search</h3>
-            <button 
-              onClick={toggleSearch}
-              className="text-primary"
-              aria-label="Close search"
-            >
-              <X size={24} />
-            </button>
+        <div className="w-full border-t border-slate-200 bg-white/95">
+          <div className="max-w-5xl mx-auto px-4 py-3 sm:py-4">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="text-sm font-semibold text-primary">Search the site</h3>
+              <button
+                onClick={toggleSearch}
+                className="ml-4 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border/70 text-muted-foreground hover:text-primary hover:border-primary/60 hover:bg-primary/5 transition-colors"
+                aria-label="Close search"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <SearchBar
+              variant="fullwidth"
+              placeholder="Search for insurance, policies, FAQs, or topics..."
+              onClose={toggleSearch}
+            />
           </div>
-          <SearchBar 
-            variant="fullwidth" 
-            placeholder="Search for insurance, policies, etc..."
-            onClose={toggleSearch}
-          />
         </div>
       )}
     </header>

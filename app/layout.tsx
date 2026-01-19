@@ -194,7 +194,7 @@ export default async function RootLayout({
     "openingHoursSpecification": openingHoursSpec
   };
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
         {/* Favicon - Dynamic from theme settings */}
         {theme?.fav_icon_url && (

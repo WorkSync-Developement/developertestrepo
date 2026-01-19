@@ -177,29 +177,49 @@ export default async function LocationGlossaryPage({ params }: PageProps) {
   ].sort();
 
   return (
-    <main className="flex-grow">
-      {/* Glossary Hero */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
-        <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
-            Insurance Glossary
+    <main className="flex-grow bg-background">
+      <section className="w-full py-20 sm:py-24 relative overflow-hidden bg-background">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-y-1/2"></div>
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium bg-secondary/10 text-secondary mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+            </span>
+            <span>Insurance Glossary</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-foreground mb-6 tracking-tight">
+            Understand Insurance With Confidence
           </h1>
-          <p className="text-theme-body text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto">
-            Understanding insurance terms made simple - {locationName}
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Plain-language explanations of common insurance terms from our {locationName} team, so you can make confident coverage decisions.
           </p>
         </div>
       </section>
 
-      {/* Alphabetical Navigation */}
       {firstLetters.length > 0 && (
-        <section className="py-8 bg-white border-b border-gray-200">
-          <div className="container mx-auto px-4 max-w-screen-xl">
+        <section className="relative -mt-10 z-20 px-4 mb-12">
+          <div className="max-w-4xl mx-auto bg-card rounded-2xl shadow-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="text-left">
+                <h2 className="text-lg font-heading font-semibold text-foreground">
+                  Browse by Letter
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Jump to terms starting with a specific letter.
+                </p>
+              </div>
+            </div>
             <div className="flex flex-wrap justify-center gap-2">
               {firstLetters.map((letter) => (
                 <a
                   key={letter}
                   href={`#letter-${letter}`}
-                  className="w-10 h-10 flex items-center justify-center bg-secondary/10 hover:bg-secondary/20 text-primary font-semibold rounded-lg transition-colors"
+                  className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-secondary/10 hover:bg-secondary/20 text-primary font-semibold rounded-lg transition-colors"
                 >
                   {letter}
                 </a>
@@ -209,65 +229,90 @@ export default async function LocationGlossaryPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Terms by Category */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 max-w-screen-xl">
+      <section className="pb-20 px-4">
+        <div className="container mx-auto max-w-screen-xl">
           {sortedCategories.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-theme-body text-lg">No glossary terms available at this time.</p>
+            <div className="text-center py-16 bg-card rounded-2xl border border-border shadow-sm">
+              <p className="text-lg text-muted-foreground">
+                No glossary terms are available at this time. Please check back soon or contact our team with your questions.
+              </p>
             </div>
           ) : (
-            sortedCategories.map((category) => (
-              <div key={category} className="mb-12">
-                <h2 className="text-3xl font-heading font-bold text-primary mb-8 border-b-2 border-secondary/20 pb-2">
-                  {category}
-                </h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {termsByCategory[category].map((term) => (
-                    <Link
-                      key={term.id}
-                      href={`/locations/${slug}/glossary/${term.slug}`}
-                      className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-secondary/50 hover:shadow-md transition-all group"
-                    >
-                      <h4 className="font-semibold text-primary group-hover:text-secondary transition-colors mb-2">
-                        {term.term}
-                      </h4>
-                      <p className="text-sm text-theme-body line-clamp-3">
-                        {stripHtmlTags(term.body || term.head).substring(0, 120)}...
-                      </p>
-                    </Link>
-                  ))}
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+              <div className="lg:col-span-8 space-y-10">
+                {sortedCategories.map((category) => (
+                  <div key={category} id={`letter-${category.charAt(0).toUpperCase()}`} className="scroll-mt-28">
+                    <div className="flex items-center gap-3 mb-6">
+                      <span className="w-1 h-6 bg-primary rounded-full"></span>
+                      <h2 className="text-2xl font-heading font-bold text-foreground">
+                        {category}
+                      </h2>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {termsByCategory[category].map((term) => (
+                        <Link
+                          key={term.id}
+                          href={`/locations/${slug}/glossary/${term.slug}`}
+                          className="group bg-card rounded-xl border border-border hover:border-primary/40 hover:shadow-md transition-all p-5 flex flex-col gap-2"
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {term.term}
+                            </h3>
+                            <span className="text-xs font-medium px-2 py-1 rounded-full bg-secondary/10 text-secondary">
+                              Learn more
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground line-clamp-3">
+                            {stripHtmlTags(term.body || term.head).substring(0, 140)}...
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))
-          )}
-        </div>
-      </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-theme-bg-alt">
-        <div className="container mx-auto px-4 max-w-screen-xl text-center">
-          <h2 className="text-3xl font-heading font-bold text-primary mb-4">
-            Need Help Understanding Your Coverage?
-          </h2>
-          <p className="text-theme-body mb-8 max-w-2xl mx-auto">
-            Our experienced team at {locationName} is here to help explain your insurance options
-            and find the right coverage for your needs.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href={`/locations/${slug}/contact`}
-              className="inline-block bg-accent hover:bg-accent/80 text-accent-foreground font-bold py-3 px-8 rounded-lg transition duration-300"
-            >
-              Contact Us Today
-            </Link>
-            <Link
-              href={`/locations/${slug}/policies`}
-              className="inline-block border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-bold py-3 px-8 rounded-lg transition duration-300"
-            >
-              View Our Policies
-            </Link>
-          </div>
+              <aside className="lg:col-span-4 space-y-6">
+                <div className="bg-card rounded-2xl shadow-sm border border-border p-6">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3">
+                    How to Use This Glossary
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Use this glossary as a quick reference when reviewing your policies, asking questions, or comparing coverage options.
+                  </p>
+                  <ul className="space-y-3 text-sm text-muted-foreground">
+                    <li>• Browse by letter or category</li>
+                    <li>• Click any term for a full explanation</li>
+                    <li>• Save your most important terms for future reference</li>
+                  </ul>
+                </div>
+
+                <div className="bg-card rounded-2xl shadow-sm border border-border p-6">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3">
+                    Still Have Questions?
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Insurance language can be complex. Our team is happy to walk through your coverage and answer any questions.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href={`/locations/${slug}/contact`}
+                      className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      Contact our team
+                    </Link>
+                    <Link
+                      href={`/locations/${slug}/policies`}
+                      className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-border text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                    >
+                      Explore coverage options
+                    </Link>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          )}
         </div>
       </section>
 

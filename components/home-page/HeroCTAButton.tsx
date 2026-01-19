@@ -23,31 +23,38 @@ const HeroCTAButton: React.FC<HeroCTAButtonProps> = ({
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  if (!isMultiLocation) {
-    return (
-      <Link
-        href="/contact"
-        className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-      >
-        Contact Us
-      </Link>
-    );
-  }
-
   return (
     <>
-      <button
-        onClick={() => setIsPopupOpen(true)}
-        className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+      {isMultiLocation ? (
+        <button
+          onClick={() => setIsPopupOpen(true)}
+          className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-brand text-white font-semibold shadow-lg hover:shadow-xl hover:bg-brand/90 transition-all duration-300"
+        >
+          Find a Location
+        </button>
+      ) : (
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-brand text-white font-semibold shadow-lg hover:shadow-xl hover:bg-brand/90 transition-all duration-300"
+        >
+          Find a Location
+        </Link>
+      )}
+      
+      <Link
+        href="/contact"
+        className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-[#d4af37] text-white font-bold shadow-lg hover:shadow-xl hover:bg-[#d4af37]/90 transition-all duration-300"
       >
-        Find a Location
-      </button>
+        Get a Quote
+      </Link>
 
-      <LocationPickerPopup
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-        locations={locations}
-      />
+      {isMultiLocation && (
+        <LocationPickerPopup
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          locations={locations}
+        />
+      )}
     </>
   );
 };

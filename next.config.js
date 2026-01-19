@@ -23,9 +23,13 @@ const nextConfig = {
       { protocol: 'https', hostname: 'bxpxxyxctdsyucqpwxrz.supabase.co' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048], // Responsive image sizes
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Image sizes for srcset
     formats: ['image/webp'], // Enable WebP format for better compression
+    qualities: [75, 90, 95, 100], // Add quality levels to fix Next.js 16 warning
   },
   
   // Add redirects for handling legacy routes

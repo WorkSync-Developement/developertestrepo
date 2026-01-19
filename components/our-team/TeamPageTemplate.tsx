@@ -21,20 +21,33 @@ export default async function TeamPageTemplate({
   const clientCity = clientData?.city 
     ? clientData.city.charAt(0).toUpperCase() + clientData.city.slice(1).toLowerCase()
     : 'your city';
+  const heroSubheading =
+    heroSection.subheading ||
+    `Dedicated insurance professionals serving ${clientCity} and the surrounding area.`;
   return (
-    <main className="flex-grow">
+    <main className="flex-grow bg-background">
       {/* Hero Section */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
-        <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
-            {heroSection.heading}
-          </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto" style={{ color: 'var(--hero-text-secondary)' }}>
-            Dedicated insurance professionals serving {clientCity} and the surrounding area.
-          </p>
+      <section className="w-full py-20 sm:py-24 relative overflow-hidden bg-background">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-y-1/2" />
         </div>
 
-        <Divider position="bottom" />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium bg-secondary/10 text-secondary mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+            </span>
+            <span>Our Team</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-6 tracking-tight">
+            {heroSection.heading}
+          </h1>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            {heroSubheading}
+          </p>
+        </div>
       </section>
 
       {/* Standard Introduction for team page */}

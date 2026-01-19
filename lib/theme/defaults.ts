@@ -17,11 +17,11 @@ export const DEFAULT_THEME: ThemeSettings = {
   client_id: '',
   
   // Primary colors (neutral dark blue)
-  color_primary: '#1e3a5f',
+  color_primary: '#364f6b',
   color_primary_foreground: '#FFFFFF',
   
   // Accent colors (neutral blue for buttons)
-  color_accent: '#2563eb',
+  color_accent: '#364f6b',
   color_accent_foreground: '#FFFFFF',
   
   // Secondary colors (neutral gray-blue)
