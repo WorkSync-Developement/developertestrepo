@@ -124,16 +124,10 @@ async function importVariantModule(
   // Dynamic import based on variant and component path
   // Note: These imports must be statically analyzable for Next.js bundling
   switch (variant) {
-    case 'coastal':
-      return import(`@/components/variants/coastal/${path}`);
+
     case 'modern':
       return import(`@/components/variants/modern/${path}`);
-    case 'minimal':
-      return import(`@/components/variants/minimal/${path}`);
-    case 'bold':
-      return import(`@/components/variants/bold/${path}`);
-    case 'classic':
-      return import(`@/components/variants/classic/${path}`);
+
     default:
       throw new Error(`Unknown variant: ${variant}`);
   }
