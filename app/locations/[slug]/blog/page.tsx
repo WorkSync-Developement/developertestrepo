@@ -2,12 +2,14 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogTopics from 'components/blog/BlogTopics';
+import ModernBlogPage from '@/components/variants/modern/blog/BlogPage';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getPageMetadata } from '@/lib/page-metadata';
 import { getAllTopics } from '@/lib/blog';
 import { getSchemaDefaults } from '@/lib/structured-data';
 import { Divider } from '@/components/ui/Divider';
+import { getTemplateVariant } from '@/lib/variants';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -97,9 +99,10 @@ export default async function LocationBlogPage({ params }: PageProps) {
     notFound();
   }
 
-  const [websiteData, clientData] = await Promise.all([
+  const [websiteData, clientData, variant] = await Promise.all([
     getWebsiteBySlug(slug),
     getClientData(),
+    getTemplateVariant(),
   ]);
   const topics = await getAllTopics(slug, { agency_name: websiteData?.agency_name, city: websiteData?.client_locations?.city, state: websiteData?.client_locations?.state });
 
@@ -111,6 +114,26 @@ export default async function LocationBlogPage({ params }: PageProps) {
   const locationState = websiteData?.client_locations?.state || clientData?.state || '';
   const agencyName = clientData?.agency_name || '';
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernBlogPage
+          topics={topics}
+          basePath={`/locations/${slug}/blog`}
+          locationCity={locationCity}
+          locationState={locationState}
+          agencyName={agencyName}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildLdJsonSchema(clientData, websiteData, slug)) }}
+        />
+      </>
+    );
+  }
+
+  // Default variant
   return (
     <main className="flex-grow">
       {/* Blog Hero */}

@@ -1,0 +1,178 @@
+/* Modern Variant CSS Variables */
+/* All colors must be defined as CSS variables for admin control */
+
+.modern-variant {
+  /* Primary Blue */
+  --modern-primary: #5B7C99;
+  --modern-primary-foreground: #FFFFFF;
+  --modern-primary-rgb: 91, 124, 153;
+  
+  /* Forest Green (Secondary/Accent) */
+  --modern-secondary: #355F4E;
+  --modern-secondary-foreground: #FFFFFF;
+  --modern-secondary-rgb: 53, 95, 78;
+  
+  /* Background Colors */
+  --modern-bg: #F6F8FA;
+  --modern-bg-alt: #FFFFFF;
+  
+  /* Text Colors */
+  --modern-text-dark: #1F2937;
+  --modern-text-light: #6B7280;
+  
+  /* Accent Gray */
+  --modern-accent-gray: #E5E7EB;
+  
+  /* Footer Dark Blue */
+  --modern-footer-bg: #09314a;
+  --modern-footer-text: #FFFFFF;
+  
+  /* Override theme variables for modern variant */
+  --color-primary: var(--modern-primary);
+  --color-primary-foreground: var(--modern-primary-foreground);
+  --color-accent: var(--modern-primary);
+  --color-accent-foreground: var(--modern-primary-foreground);
+  --color-secondary: var(--modern-secondary);
+  --color-secondary-foreground: var(--modern-secondary-foreground);
+  --color-background: var(--modern-bg-alt);
+  --color-background-alt: var(--modern-bg);
+  --color-text-primary: var(--modern-text-dark);
+  --color-text-body: var(--modern-text-light);
+  --footer-bg: var(--modern-footer-bg);
+  --footer-text: var(--modern-footer-text);
+}
+
+/* Utility classes for modern variant specific colors */
+.modern-variant .bg-modern-primary {
+  background-color: var(--modern-primary);
+}
+
+.modern-variant .text-modern-primary {
+  color: var(--modern-primary);
+}
+
+.modern-variant .bg-modern-secondary {
+  background-color: var(--modern-secondary);
+}
+
+.modern-variant .text-modern-secondary {
+  color: var(--modern-secondary);
+}
+
+.modern-variant .bg-modern-bg {
+  background-color: var(--modern-bg);
+}
+
+.modern-variant .bg-modern-bg-alt {
+  background-color: var(--modern-bg-alt);
+}
+
+.modern-variant .text-modern-text-dark {
+  color: var(--modern-text-dark);
+}
+
+.modern-variant .text-modern-text-light {
+  color: var(--modern-text-light);
+}
+
+.modern-variant .border-modern-primary {
+  border-color: var(--modern-primary);
+}
+
+.modern-variant .border-modern-secondary {
+  border-color: var(--modern-secondary);
+}
+
+/* Gradient utilities - Only primary blue, no green */
+.modern-variant .bg-gradient-modern-primary {
+  background: linear-gradient(135deg, var(--modern-primary), color-mix(in srgb, var(--modern-primary) 80%, transparent));
+}
+
+.modern-variant .bg-gradient-modern-primary-single {
+  background: linear-gradient(to bottom right, var(--modern-primary), var(--modern-primary));
+}
+
+.modern-variant .bg-gradient-modern-primary-horizontal {
+  background: linear-gradient(to right, var(--modern-primary), color-mix(in srgb, var(--modern-primary) 30%, transparent));
+}
+
+.modern-variant .bg-gradient-modern-primary-secondary {
+  background: linear-gradient(to right, var(--modern-primary), var(--modern-secondary), var(--modern-primary));
+}
+
+.modern-variant .bg-gradient-modern-radial-primary {
+  background: radial-gradient(circle, var(--modern-primary), transparent);
+}
+
+.modern-variant .bg-gradient-modern-radial-secondary {
+  background: radial-gradient(circle, var(--modern-primary), transparent);
+}
+
+.modern-variant .bg-gradient-modern-radial-white {
+  background: radial-gradient(circle, var(--modern-bg-alt), transparent);
+}
+
+.modern-variant .bg-gradient-modern-section {
+  background: linear-gradient(to bottom, var(--modern-bg), var(--modern-bg-alt));
+}
+
+.modern-variant .bg-gradient-modern-cta {
+  background: linear-gradient(135deg, var(--modern-primary), color-mix(in srgb, var(--modern-primary) 85%, transparent));
+}
+
+.modern-variant .from-modern-primary-5 {
+  --tw-gradient-from: color-mix(in srgb, var(--modern-primary) 5%, transparent);
+  --tw-gradient-to: color-mix(in srgb, var(--modern-primary) 5%, transparent);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.modern-variant .to-modern-secondary-5 {
+  --tw-gradient-to: color-mix(in srgb, var(--modern-primary) 5%, transparent);
+}
+
+.modern-variant .from-modern-primary-10 {
+  --tw-gradient-from: color-mix(in srgb, var(--modern-primary) 10%, transparent);
+  --tw-gradient-to: color-mix(in srgb, var(--modern-primary) 10%, transparent);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.modern-variant .to-modern-secondary-10 {
+  --tw-gradient-to: color-mix(in srgb, var(--modern-primary) 10%, transparent);
+}
+
+/* Opacity utilities using CSS variables with opacity */
+.modern-variant .bg-modern-primary-5 {
+  background-color: color-mix(in srgb, var(--modern-primary) 5%, transparent);
+}
+
+.modern-variant .bg-modern-primary-10 {
+  background-color: color-mix(in srgb, var(--modern-primary) 10%, transparent);
+}
+
+.modern-variant .bg-modern-primary-20 {
+  background-color: color-mix(in srgb, var(--modern-primary) 20%, transparent);
+}
+
+.modern-variant .bg-modern-primary-30 {
+  background-color: color-mix(in srgb, var(--modern-primary) 30%, transparent);
+}
+
+.modern-variant .bg-modern-primary-70 {
+  background-color: color-mix(in srgb, var(--modern-primary) 70%, transparent);
+}
+
+.modern-variant .from-modern-primary-5 {
+  --tw-gradient-from: rgba(var(--modern-primary-rgb), 0.05);
+}
+
+.modern-variant .to-modern-secondary-5 {
+  --tw-gradient-to: rgba(var(--modern-secondary-rgb), 0.05);
+}
+
+.modern-variant .from-modern-primary-10 {
+  --tw-gradient-from: rgba(var(--modern-primary-rgb), 0.1);
+}
+
+.modern-variant .to-modern-secondary-10 {
+  --tw-gradient-to: rgba(var(--modern-secondary-rgb), 0.1);
+}

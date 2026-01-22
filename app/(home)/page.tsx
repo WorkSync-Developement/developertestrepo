@@ -1,5 +1,9 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { getTemplateVariant } from '@/lib/variants';
+import { getClientData } from '@/lib/client';
+
+// Common components
 import HeroSection from '@/components/home-page/HeroSection';
 import IntroSection from '@/components/home-page/IntroSection';
 import LocationPoliciesSection from '@/components/home-page/LocationPoliciesSection';
@@ -7,7 +11,15 @@ import Testimonials from '@/components/home-page/TestimonialsWrapper';
 import HomeCTA from '@/components/home-page/HomeCTA';
 import FAQPreview from '@/components/home-page/FAQPreviewWrapper';
 import InsuranceCareersSection from '@/components/home-page/InsuranceCareersSection';
-import { getClientData } from '@/lib/client';
+
+// Modern variant components
+import ModernHeroSection from '@/components/variants/modern/home/HeroSection';
+import ModernIntroSection from '@/components/variants/modern/home/IntroSection';
+import ModernLocationPoliciesSection from '@/components/variants/modern/home/LocationPoliciesSection';
+import ModernTestimonials from '@/components/variants/modern/home/Testimonials';
+import ModernHomeCTA from '@/components/variants/modern/home/HomeCTA';
+import ModernFAQPreview from '@/components/variants/modern/home/FAQPreview';
+import ModernCareersSection from '@/components/variants/modern/home/CareersSection';
 
 // Page-specific metadata overrides - inherits from layout.tsx
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,7 +50,25 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-export default function Home() {
+export default async function Home() {
+  const variant = await getTemplateVariant();
+
+  // Use modern variant components if variant is modern
+  if (variant === 'modern') {
+    return (
+      <div className="home-content">
+        <ModernHeroSection />
+        <ModernIntroSection />
+        <ModernLocationPoliciesSection />
+        <ModernTestimonials />
+        <ModernHomeCTA />
+        <ModernFAQPreview />
+        <ModernCareersSection />
+      </div>
+    );
+  }
+
+  // Default/common components
   return (
     <div className="home-content">
       <HeroSection />

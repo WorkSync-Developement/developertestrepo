@@ -2,10 +2,12 @@ import React, { Suspense } from 'react';
 import SearchBar from 'components/search/SearchBar';
 import SearchResults from 'components/search/SearchResults';
 import SearchHeader from 'components/search/SearchHeader';
+import ModernSearchPage from '@/components/variants/modern/search/SearchPage';
 import { Metadata } from 'next';
 import { getClientData } from '@/lib/client';
 import { getWebsiteData } from '@/lib/website';
 import { getSchemaDefaults, buildPageUrl, buildOpeningHoursSpec } from '@/lib/structured-data';
+import { getTemplateVariant } from '@/lib/variants';
 
 export async function generateMetadata(): Promise<Metadata> {
   const clientData = await getClientData();
@@ -74,11 +76,26 @@ const buildLdJsonSchema = (clientData: any, websiteData: any) => {
 };
 
 export default async function SearchPage() {
-  const [clientData, websiteData] = await Promise.all([
+  const [clientData, websiteData, variant] = await Promise.all([
     getClientData(),
     getWebsiteData(),
+    getTemplateVariant(),
   ]);
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernSearchPage />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildLdJsonSchema(clientData, websiteData)) }}
+        />
+      </>
+    );
+  }
+
+  // Default variant
   return (
     <main className="flex-grow">
       <section className="py-12 bg-theme-bg-alt relative w-full">

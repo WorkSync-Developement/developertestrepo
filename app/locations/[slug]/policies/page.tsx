@@ -8,6 +8,8 @@ import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website
 import { getPageMetadata } from '@/lib/page-metadata';
 import { getAllPolicies } from '@/lib/policy-categories';
 import { Divider } from '@/components/ui/Divider';
+import { getTemplateVariant } from '@/lib/variants';
+import ModernPoliciesPage from '@/components/variants/modern/policies/PoliciesPage';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -67,11 +69,25 @@ export default async function LocationPoliciesPage({ params }: PageProps) {
   }
 
   const locationId = websiteData?.client_locations?.id;
-  const [allPolicies, pageMetadata] = await Promise.all([
+  const [allPolicies, pageMetadata, variant] = await Promise.all([
     getAllPolicies(locationId),
     getPageMetadata('policies', locationId),
+    getTemplateVariant(),
   ]);
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <ModernPoliciesPage
+        allPolicies={allPolicies}
+        slug={slug}
+        heroHeading={pageMetadata.hero_heading || "Our Policies"}
+        heroSubheading={pageMetadata.hero_subheading || "Browse our insurance policies - auto, home, life, and business coverage. Compare options and get personalized quotes today."}
+      />
+    );
+  }
+
+  // Default variant
   return (
     <div>
       {/* Policies Page Hero */}
@@ -87,40 +103,41 @@ export default async function LocationPoliciesPage({ params }: PageProps) {
         <Divider position="bottom" />
       </section>
 
+      {/* Policies Grid */}
       <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {allPolicies.map((policy) => (
-          <Link 
-            key={policy.slug} 
-            href={`/locations/${slug}/policies/${policy.slug}`} 
-            className="block"
-          >
-            <div className="bg-card-bg rounded-xl p-8 text-center shadow-lg border border-card-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer h-full">
-              <div className="rounded-full bg-secondary/40 h-20 w-20 flex items-center justify-center mx-auto mb-4 shadow-md border border-card-border/20">
-                {policy.icon_url ? (
-                  <Image src={policy.icon_url} alt="" width={40} height={40} className="text-primary" />
-                ) : (
-                  <ShieldCheck size={24} className="text-primary" />
+          {allPolicies.map((policy) => (
+            <Link 
+              key={policy.slug} 
+              href={`/locations/${slug}/policies/${policy.slug}`} 
+              className="block"
+            >
+              <div className="bg-card-bg rounded-xl p-8 text-center shadow-lg border border-card-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer h-full">
+                <div className="rounded-full bg-secondary/40 h-20 w-20 flex items-center justify-center mx-auto mb-4 shadow-md border border-card-border/20">
+                  {policy.icon_url ? (
+                    <Image src={policy.icon_url} alt="" width={40} height={40} className="text-primary" />
+                  ) : (
+                    <ShieldCheck size={24} className="text-primary" />
+                  )}
+                </div>
+                <h3 className="text-xl font-heading font-bold text-primary mb-2">
+                  {policy.title}
+                </h3>
+                <div className="h-1 w-12 bg-accent/60 rounded mx-auto mt-1 mb-4"></div>
+                {policy.content_summary && (
+                  <p className="text-theme-body mb-6 min-h-[3rem] line-clamp-2">
+                    {policy.content_summary}
+                  </p>
                 )}
+                <div className="flex justify-center">
+                  <span className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-6 rounded-full text-sm transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <span>Learn More</span>
+                    <ShieldCheck size={14} />
+                  </span>
+                </div>
               </div>
-              <h3 className="text-xl font-heading font-bold text-primary mb-2">
-                {policy.title}
-              </h3>
-              <div className="h-1 w-12 bg-accent/60 rounded mx-auto mt-1 mb-4"></div>
-              {policy.content_summary && (
-                <p className="text-theme-body mb-6 min-h-[3rem] line-clamp-2">
-                  {policy.content_summary}
-                </p>
-              )}
-              <div className="flex justify-center">
-                <span className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-6 rounded-full text-sm transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2">
-                  <span>Learn More</span>
-                  <ShieldCheck size={14} />
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
         </div>
       </div>
     </div>

@@ -4,8 +4,12 @@ import { LocationProvider } from '@/components/location/LocationProvider';
 import { getWebsiteBySlug } from '@/lib/website';
 import { getClientData } from '@/lib/client';
 import { getSchemaDefaults } from '@/lib/structured-data';
+import { getTemplateVariant } from '@/lib/variants';
 import HeaderShell from "components/layout/HeaderShell";
 import FooterShell from "components/layout/FooterShell";
+import ModernHeaderShell from "@/components/variants/modern/layout/HeaderShell";
+import ModernFooterShell from "@/components/variants/modern/layout/FooterShell";
+import '@/styles/modern-variant.css';
 
 interface LocationLayoutProps {
   children: React.ReactNode;
@@ -107,14 +111,21 @@ export async function generateMetadata({ params }: LocationLayoutProps): Promise
 export default async function LocationLayout({ children, params }: LocationLayoutProps) {
   const { slug } = await params;
   const locationPrefix = `/locations/${slug}`;
+  const variant = await getTemplateVariant();
+
+  // Use modern variant shell components if variant is modern
+  const HeaderComponent = variant === 'modern' ? ModernHeaderShell : HeaderShell;
+  const FooterComponent = variant === 'modern' ? ModernFooterShell : FooterShell;
 
   return (
     <LocationProvider locationPrefix={locationPrefix}>
-      <HeaderShell locationPrefix={locationPrefix} />
-      <main className="flex-grow">
-        {children}
-      </main>
-      <FooterShell locationPrefix={locationPrefix} locationSlug={slug} />
+      <div className={variant === 'modern' ? 'modern-variant' : ''}>
+        <HeaderComponent locationPrefix={locationPrefix} />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <FooterComponent locationPrefix={locationPrefix} locationSlug={slug} />
+      </div>
     </LocationProvider>
   );
 }

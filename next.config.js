@@ -84,6 +84,21 @@ const nextConfig = {
   
   // Environment variables - all site-specific values come from Supabase via NEXT_PUBLIC_CLIENT_ID
   env: {},
+  
+  // Webpack configuration to exclude markdown files from being parsed
+  webpack: (config) => {
+    // The issue: When webpack sees dynamic imports like import(`@/components/variants/modern/${path}`),
+    // it tries to bundle ALL files in that directory, including README.md
+    // Solution: Use IgnorePlugin to ignore .md files completely
+    const webpack = require('webpack');
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\.md$/,
+      })
+    );
+    
+    return config;
+  },
 };
 
 module.exports = nextConfig;

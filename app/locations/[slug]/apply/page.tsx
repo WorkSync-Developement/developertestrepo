@@ -2,11 +2,15 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import JobApplicationForm from 'components/apply/JobApplicationForm';
+import ModernApplyPage from '@/components/variants/modern/apply/ApplyPage';
+import ModernApplyPageDisabled from '@/components/variants/modern/apply/ApplyPageDisabled';
 import { getClientData } from '@/lib/client';
 import { getWebsiteBySlug, isMultiLocation, getAllWebsites } from '@/lib/website';
 import { getJobApplicationSettings } from '@/lib/apply';
 import { Divider } from '@/components/ui/Divider';
 import { formatPhoneNumber, normalizePhoneNumber } from '@/lib/utils';
+import { getTemplateVariant } from '@/lib/variants';
+import { Phone } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -82,7 +86,10 @@ export default async function LocationApplyPage({ params }: PageProps) {
   }
 
   const locationId = websiteData.client_locations?.id;
-  const settings = await getJobApplicationSettings(locationId);
+  const [settings, variant] = await Promise.all([
+    getJobApplicationSettings(locationId),
+    getTemplateVariant(),
+  ]);
 
   const locationName = websiteData.client_locations?.location_name || '';
   const phone = websiteData?.phone || clientData?.phone;
@@ -93,6 +100,9 @@ export default async function LocationApplyPage({ params }: PageProps) {
 
   // If the application page is disabled
   if (!is_enabled) {
+    if (variant === 'modern') {
+      return <ModernApplyPageDisabled />;
+    }
     return (
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
         <div className="text-center px-4">
@@ -107,6 +117,25 @@ export default async function LocationApplyPage({ params }: PageProps) {
     );
   }
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <ModernApplyPage
+        heroSection={hero_section}
+        formSection={form_section}
+        formFields={form_fields}
+        formTitle={form_title}
+        successMessage={success_message}
+        locationId={locationId}
+        locationName={locationName}
+        formattedPhone={formattedPhone}
+        normalizedPhone={normalizedPhone}
+        slug={slug}
+      />
+    );
+  }
+
+  // Default variant
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}

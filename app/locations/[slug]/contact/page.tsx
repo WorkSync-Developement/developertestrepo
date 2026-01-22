@@ -1,6 +1,8 @@
 import React from 'react';
 import { Phone, MapPin, Clock, MessageSquare } from 'lucide-react';
+import { getTemplateVariant } from '@/lib/variants';
 import ContactForm from '@/components/contact/ContactForm';
+import ModernContactPage from '@/components/variants/modern/contact/ContactPage';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getClientData } from '@/lib/client';
@@ -110,10 +112,11 @@ export default async function LocationContactPage({ params }: PageProps) {
     notFound();
   }
 
-  const [websiteData, clientData, features] = await Promise.all([
+  const [websiteData, clientData, features, variant] = await Promise.all([
     getWebsiteBySlug(slug),
     getClientData(),
     getFeatures(),
+    getTemplateVariant(),
   ]);
 
   if (!websiteData) {
@@ -152,6 +155,31 @@ export default async function LocationContactPage({ params }: PageProps) {
     ? `Map of ${clientData.agency_name} in ${location?.city || ''}, ${location?.state || ''}`
     : 'Map location';
 
+  // Use modern variant component if variant is modern
+  if (variant === 'modern') {
+    return (
+      <>
+        <ModernContactPage
+          clientId={clientId}
+          locationId={location?.id}
+          location={location}
+          formattedPhone={formattedPhone}
+          smsPhone={smsPhone}
+          smsMessage={smsMessage}
+          showBusinessHours={showBusinessHours}
+          businessHours={businessHours}
+          mapSrc={mapSrc}
+          mapTitle={mapTitle}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateLdJsonSchema(clientData, websiteData, websiteData)) }}
+        />
+      </>
+    );
+  }
+
+  // Default variant
   return (
     <main className="flex-grow">
       {/* Contact Page Hero */}
